@@ -1,5 +1,6 @@
 import Foundation
 
+// Énumération Animal représentant différents types d'animaux
 public enum Animal {
     case rat
     case cat
