@@ -10,7 +10,7 @@ public struct Piece : CustomStringConvertible {
     }
     
     public var description: String {
-        "[\(owner):\(animal)]"
+        "[\(owner.rawValue):\(animal)]"
     }
     
 }
