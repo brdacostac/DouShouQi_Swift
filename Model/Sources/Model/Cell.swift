@@ -16,7 +16,7 @@ public struct Cell : CustomStringConvertible{
     // Propriété de description qui est conforme au protocole CustomStringConvertible (ToString)
     public var description: String {
         let pieceDescription = (piece != nil) ? "\(piece!)" : "ø"
-        return "\(pieceDescription) on \(cellType), \(initialOwner.rawValue)"
+        return "\(pieceDescription) on \(cellType), \(initialOwner.description)"
     }
     
 }

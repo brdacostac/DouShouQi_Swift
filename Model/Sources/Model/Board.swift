@@ -4,7 +4,7 @@ import Foundation
 public struct Board {
     public let nbRows: Int
     public let nbColumns: Int
-    private(set) var grid: [[Cell]]
+    public private(set) var grid: [[Cell]]
     
     public init? (withGrid: [[Cell]]) {
         
@@ -23,12 +23,11 @@ public struct Board {
         }
         
         //Verifier que tout les lignes contiennet le même nombre de colonnes que la case 0
-        for ligne in withGrid {
-            guard ligne.count == columns
-            else {
-                return nil // Retourner nil si une ligne a une taille différente
-            }
+        guard withGrid.allSatisfy({ $0.count == columns }) else {
+            return nil // Retourner nil si une ligne a une taille différente
         }
+        
+        
         
         self.nbRows = withGrid.count
         self.nbColumns = columns

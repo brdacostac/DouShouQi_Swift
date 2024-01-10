@@ -13,7 +13,7 @@ public struct Piece : CustomStringConvertible {
     
     // Propriété de description qui est conforme au protocole CustomStringConvertible (ToString)
     public var description: String {
-        "[\(owner.rawValue):\(animal)]"
+        "[\(owner.description):\(animal)]"
     }
     
 }
