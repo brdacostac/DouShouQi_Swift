@@ -7,10 +7,10 @@ extension Model.Board : CustomStringConvertible{
     
     public var description: String {
         var variable : String = " "
-        for r in 0..<self.grid.count{
+        for r in 0..<grid.count{
             variable += "\n"
-            for c in 0..<self.grid[r].count{
-                variable += "\(self.grid[r][c].cellType) \(self.grid[r][c].piece?.animal) \(self.grid[r][c].initialOwner)"
+            for c in 0..<grid[r].count{
+                variable += "\(grid[r][c].cellType.symbol) \(grid[r][c].piece?.animal.symbol ?? "   ") \(grid[r][c].initialOwner.symbol)"
             }
         }
         return variable
