@@ -6,7 +6,6 @@
 
 Sommaire
 
-<div  align="center">
 
   
  1. [Introduction](#introduction)
