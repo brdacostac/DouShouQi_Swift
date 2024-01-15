@@ -2,6 +2,7 @@ import Foundation
 import Model
 import ExtensionsTests
 
+// Création des pièces des joueurs 1 et 2
 let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
 let rat2: Piece = Piece(withOwner: .player2, andAnimal: .rat)
 let cat1: Piece = Piece(withOwner: .player1, andAnimal: .cat)
@@ -19,12 +20,14 @@ let lion2: Piece = Piece(withOwner: .player2, andAnimal: .lion)
 let elephant1: Piece = Piece(withOwner: .player1, andAnimal: .elephant)
 let elephant2: Piece = Piece(withOwner: .player2, andAnimal: .elephant)
 
+// Création des cellules avec différents types
 let jungleCell: Cell = Cell(ofType: .jungle)
 let waterCell: Cell = Cell(ofType: .water)
 let denCell: Cell = Cell(ofType: .den)
 let trapCell: Cell = Cell(ofType: .trap)
 let voidCell: Cell = Cell(ofType: .unknown)
 
+// Création des cellules de départ pour chaque pièce
 let rat1StartCell: Cell = Cell(ofType: .jungle, ownedBy: rat1.owner, withPiece: rat1)
 let rat2StartCell: Cell = Cell(ofType: .jungle, ownedBy: rat2.owner, withPiece: rat2)
 let cat1StartCell: Cell = Cell(ofType: .jungle, ownedBy: cat1.owner, withPiece: cat1)
@@ -42,8 +45,9 @@ let lion2StartCell: Cell = Cell(ofType: .jungle, ownedBy: lion2.owner, withPiece
 let elephant1StartCell: Cell = Cell(ofType: .jungle, ownedBy: elephant1.owner, withPiece: elephant1)
 let elephant2StartCell: Cell = Cell(ofType: .jungle, ownedBy: elephant2.owner, withPiece: elephant2)
 
-let board: Board = Board(withGrid: [
-    [lion1StartCell, trapCell, trapCell, denCell, trapCell, jungleCell, lion1StartCell],
+// Initialisation du plateau de jeu avec une configuration prédéfinie
+var board: Board = Board(withGrid: [
+    [lion1StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion1StartCell],
     [jungleCell, dog1StartCell, jungleCell, trapCell, jungleCell, cat1StartCell, jungleCell],
     [rat1StartCell, jungleCell, leopard1StartCell, jungleCell, wolf1StartCell, jungleCell, elephant1StartCell],
     [jungleCell, waterCell, waterCell, jungleCell, waterCell, waterCell, jungleCell],
@@ -55,6 +59,6 @@ let board: Board = Board(withGrid: [
     [lion2StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion2StartCell]
 ])!
 
-
+// Affichage du tableau dans le console
 var test = board.description
 print(test)
