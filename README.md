@@ -106,7 +106,7 @@ Le point culminant de la semaine a été la création d'un test en ligne de comm
 
 ## Auteur :busts_in_silhouette:
 
-BUT Informatique - IUT Clermont Auvergne - 2023-2024
+BUT Informatique - Clermont Ferrand - 2023-2024
 Étudiant 3ème année - Filière Mobile :
    
 `DA COSTA CUNHA Bruno`
