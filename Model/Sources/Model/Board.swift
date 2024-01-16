@@ -34,19 +34,16 @@ public struct Board {
         self.grid = withGrid
     }
     
-    // Ici "of" c'est pour entiquetter le parametre, donc si on va appeler cette methode aprés il donner le valeur de "of" dans l'appel
+    // Ici "of" c'est pour entiquetter le parametre
     public func countPieces(of player : Owner ) -> Int {
-        var count = 0
+        // flatMap transforme mon tableau de 2 dimensions en 1 seul dimension
+        let grille = grid.flatMap { $0 }
         
-        for row in grid {
-            for cell in row {
-                if let pieceOwner = cell.piece?.owner, pieceOwner == player {
-                    count += 1
-                }
-            }
-        }
+        //On filtre pour guarder seulement les pieces du joueur passé en parametres
+        // NbPieces maintenant est un tableau de 1 dimension que contient la liste de piece du player passé en parametre
+        let nbPieces = grille.filter { $0.piece?.owner == player }
         
-        return count
+        return nbPieces.count
     }
     
     // Méthode pour compter le nombre de pièces des deux joueurs
