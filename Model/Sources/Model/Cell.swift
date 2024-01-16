@@ -4,7 +4,7 @@ import Foundation
 public struct Cell : CustomStringConvertible{
     public let cellType: CellType
     public let initialOwner: Owner
-    public let piece: Piece?
+    public var piece: Piece? // on le met en var pour pouvoir bouger la piece (dans le insertion du board par exemple)
     
     // Initialisateur de la structure Cell qui attribue des valeurs par defaut
     public init(ofType: CellType, ownedBy: Owner = .noOne, withPiece: Piece? = nil) {

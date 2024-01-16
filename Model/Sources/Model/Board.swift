@@ -58,5 +58,39 @@ public struct Board {
         return (player1NbPieces, player2NbPieces)
     }
     
+    //Function pour inserer une piece dans les cordonnées passés en parametres.
+    public mutating func insertPiece(piece:Piece, atRow: Int, andColumn : Int) -> BoardResult{
         
+        //On verifie que la ligne et la colonne ne sont pas negatives et sont inferieurs à la taille du board
+        guard atRow < nbRows && andColumn < nbColumns && atRow >= 0 && andColumn >= 0 else {
+            return .failed(reason: .outOfBounds)
+        }
+        
+        //On verifie que la cellule est vide pour pouvoir inserer la piece
+        guard grid[atRow][andColumn].piece == nil else {
+            return .failed(reason: .cellNotEmpty)
+        }
+        
+        //On insere la piece dans les cordonnées passés en parametres
+        grid[atRow][andColumn].piece = piece
+        return .ok
+    }
+    
+    //Function pour supprimer une piece dans les cordonnées passés en parametres.
+    public mutating func removePiece(piece:Piece, atRow: Int, andColumn : Int) -> BoardResult{
+        
+        //On verifie que la ligne et la colonne ne sont pas negatives et sont inferieurs à la taille du board
+        guard atRow < nbRows && andColumn < nbColumns && atRow >= 0 && andColumn >= 0 else {
+            return .failed(reason: .outOfBounds)
+        }
+        
+        //On verifie que la cellule n'est pas vide pour pouvoir supprimer la piece
+        guard grid[atRow][andColumn].piece != nil else {
+            return .failed(reason: .cellEmpty)
+        }
+        
+        //On insere la piece dans les cordonnées passés en parametres
+        grid[atRow][andColumn].piece = nil
+        return .ok
+    }
 }

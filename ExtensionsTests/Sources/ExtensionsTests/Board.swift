@@ -10,7 +10,7 @@ extension Model.Board : CustomStringConvertible{
         for r in 0..<grid.count{
             variable += "\n"
             for c in 0..<grid[r].count{
-                variable += "\(grid[r][c].cellType.symbol) \(grid[r][c].piece?.animal.symbol ?? "   ") \(grid[r][c].initialOwner.symbol)"
+                variable += "\(grid[r][c].cellType.symbol) \(grid[r][c].piece?.animal.symbol ?? "   ") \(grid[r][c].piece?.owner.symbol ?? " ")"
             }
         }
         return variable
