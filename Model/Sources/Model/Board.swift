@@ -77,7 +77,7 @@ public struct Board {
     }
     
     //Function pour supprimer une piece dans les cordonnées passés en parametres.
-    public mutating func removePiece(piece:Piece, atRow: Int, andColumn : Int) -> BoardResult{
+    public mutating func removePiece( atRow: Int, andColumn : Int) -> BoardResult{
         
         //On verifie que la ligne et la colonne ne sont pas negatives et sont inferieurs à la taille du board
         guard atRow < nbRows && andColumn < nbColumns && atRow >= 0 && andColumn >= 0 else {

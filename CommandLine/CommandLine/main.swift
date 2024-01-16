@@ -62,3 +62,33 @@ var board: Board = Board(withGrid: [
 // Affichage du tableau dans le console
 var test = board.description
 print(test)
+
+
+// Testes des methodes pour conter le nombre de pieces
+let countPiecesP1 = board.countPieces(of: .player1)
+let countPiecesP2 = board.countPieces(of: .player1)
+let countPiecesPlayers = board.countPiecesTwoPlayers()
+
+print("Nombre pieces P1 : ", countPiecesP1)
+print("Nombre pieces P2 : ", countPiecesP2)
+print("Nombre de pieces de P1 et P2 : ", countPiecesPlayers)
+
+//Testes des methodes d'insertion et suppression pour bouger les pieces dans le board
+let statusInsertion = board.insertPiece(piece: wolf1, atRow: 0, andColumn: 1)
+print("Insertion : Piece Wolf du player 1 dans le board")
+print("Insertion Status : " , statusInsertion)
+print(board.description)
+
+//Ici on veut tester si la valeur de nombre de pieces de P1 change aprés avoir inseré une nouvelle piece
+let countPiecesP1ApresInsertion = board.countPieces(of: .player1)
+print("Nombre pieces P1 aprés insertion : ", countPiecesP1ApresInsertion)
+
+let statusSuppression = board.removePiece(atRow: 0, andColumn: 0)
+print("Suppression : Piece Lion du player 1 dans le board")
+print("Suppression Status : " , statusSuppression)
+print(board.description)
+
+
+
+
+
