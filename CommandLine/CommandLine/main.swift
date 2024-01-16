@@ -47,7 +47,7 @@ let elephant2StartCell: Cell = Cell(ofType: .jungle, ownedBy: elephant2.owner, w
 
 // Initialisation du plateau de jeu avec une configuration prédéfinie
 var board: Board = Board(withGrid: [
-    [lion1StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion1StartCell],
+    [lion1StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, tiger1StartCell],
     [jungleCell, dog1StartCell, jungleCell, trapCell, jungleCell, cat1StartCell, jungleCell],
     [rat1StartCell, jungleCell, leopard1StartCell, jungleCell, wolf1StartCell, jungleCell, elephant1StartCell],
     [jungleCell, waterCell, waterCell, jungleCell, waterCell, waterCell, jungleCell],
@@ -56,7 +56,7 @@ var board: Board = Board(withGrid: [
     [jungleCell, waterCell, waterCell, jungleCell, waterCell, waterCell, jungleCell],
     [elephant2StartCell, jungleCell, wolf2StartCell, jungleCell, leopard2StartCell, jungleCell, rat2StartCell],
     [jungleCell, cat2StartCell, jungleCell, trapCell, jungleCell, dog2StartCell, jungleCell],
-    [lion2StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion2StartCell]
+    [tiger2StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion2StartCell]
 ])!
 
 // Affichage du tableau dans le console
