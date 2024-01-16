@@ -33,4 +33,30 @@ public struct Board {
         self.nbColumns = columns
         self.grid = withGrid
     }
+    
+    // Ici "of" c'est pour entiquetter le parametre, donc si on va appeler cette methode aprés il donner le valeur de "of" dans l'appel
+    public func countPieces(of player : Owner ) -> Int {
+        var count = 0
+        
+        for row in grid {
+            for cell in row {
+                if let pieceOwner = cell.piece?.owner, pieceOwner == player {
+                    count += 1
+                }
+            }
+        }
+        
+        return count
+    }
+    
+    // Méthode pour compter le nombre de pièces des deux joueurs
+    public func countPiecesTwoPlayers() -> (player1Count: Int, player2Count: Int) {
+        let player1NbPieces = countPieces(of: .player1)
+        let player2NbPieces = countPieces(of: .player2)
+        
+        //On return le tuple
+        return (player1NbPieces, player2NbPieces)
+    }
+    
+        
 }
