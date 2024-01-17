@@ -71,6 +71,27 @@ final class ModelTests: XCTestCase {
         XCTAssertNil(board.grid[1][1].piece)
     }
     
-    //Il faut juste faire des tests de performance maintenant
+    //Test de performance pour le boardInitializer, va mesurer le temps que ça prends
+    func testPerformanceBoardInitializer() throws {
+        self.measure {
+            _ = Board(withGrid: board.grid)
+        }
+    }
+    
+    //Test de performance pour le CountPiece pour 1 player
+    func testPerformanceCountPiece() throws {
+        self.measure {
+            _ = board.countPieces(of: .player1)
+        }
+    }
+    
+    //Test de performance pour CountPiece pour 2 players
+    func testPerformancePiecesTwoPlayers() throws {
+        self.measure {
+            _ = board.countPiecesTwoPlayers()
+        }
+    }
+    
+
     
 }
