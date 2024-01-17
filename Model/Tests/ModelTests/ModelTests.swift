@@ -103,6 +103,18 @@ final class ModelTests: XCTestCase {
             _ = board.removePiece(atRow: 2, andColumn: 0)
         }
     }
+    
+    //Test de parametizedInsert
+    func testParametizedInsert() throws {
+        func expect(expectedBoardResult : BoardResult, atRow : Int, andColumn : Int) {
+            let piece = Piece(withOwner: .player1, andAnimal: .wolf)
+            let boardResult = board.insertPiece(piece: piece, atRow: atRow, andColumn: andColumn)
+            XCTAssertEqual(expectedBoardResult, boardResult)
+        }
+        
+        expect(expectedBoardResult: .ok, atRow: 3, andColumn: 1)
+        expect(expectedBoardResult: .failed(reason: .outOfBounds), atRow: 5, andColumn: 4)
+    }
 
     
 }
