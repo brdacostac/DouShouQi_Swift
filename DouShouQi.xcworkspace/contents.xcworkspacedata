@@ -10,4 +10,7 @@
    <FileRef
       location = "group:Model">
    </FileRef>
+   <FileRef
+      location = "group:ModelTests.xctestplan">
+   </FileRef>
 </Workspace>

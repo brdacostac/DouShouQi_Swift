@@ -4,7 +4,9 @@ import Foundation
 public struct Board {
     public let nbRows: Int
     public let nbColumns: Int
-    public private(set) var grid: [[Cell]]
+    //public private(set) var grid: [[Cell]]
+    public var grid: [[Cell]]
+
     
     public init? (withGrid: [[Cell]]) {
         
