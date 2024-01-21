@@ -9,9 +9,12 @@ Sommaire
 
   
  1. [Introduction](#introduction)
- 2. [TP1](#tp1)
- 3. [TP2](#tp2)
- 4. [Auteur](#auteur)
+ 2. [Lancer le jeu](#lancer)
+ 3. [Lancer les tests](#tests)
+ 4. [TP1](#tp1)
+ 5. [TP2](#tp2)
+ 6. [TP3](#tp3)
+ 7. [Auteur](#auteur)
 
 </div>
 
@@ -34,8 +37,6 @@ Bienvenue dans le passionnant monde de Dou Shou Qi, une application console en c
   
 
 <div  id='apropos'/>
-
-  
 
 ## **À propos de Dou Shou Qi** :computer:
 
@@ -65,19 +66,33 @@ Le jeu a plusieurs objectifs possibles pour la victoire :
 
 <div  id='material'/>
 
-  
-
-## ** Matériel** :computer:
+## **Matériel** :computer:
 
 
 Chaque joueur possède huit pièces numérotées, représentant la force de l'animal. Les animaux incluent le Rat, le Chat, le Chien, le Loup, le Léopard, le Tigre, le Lion et l'Éléphant. Le plateau de jeu est une grille à deux dimensions de 10 lignes et 7 colonnes, avec des cases spéciales telles que la Jungle, le Lac, la Tanière et le Piège.
 
 
+
+<div  id='lancer'/>
+
+## 🎮 Comment lancer le jeu 
+Pour jouer vous devrez cloner ce repos et lancer cette commande dans un terminal :
+```sh
+swift run
+```
+
+<div  id='tests'/>
+
+## 🧪 Tester
+Vous pouvez lancer les tests en utilisant :
+```sh
+swift test
+```
+
+
 <div  id='tp1'/>
 
 *******
-
-
 
 ## TP1 :zap:
 
@@ -87,16 +102,26 @@ Le package "Model" est désormais fonctionnel, définissant les entités essenti
 
 Le point culminant de la semaine a été la création d'un test en ligne de commande réussi, initialisant un plateau de jeu et l'affichant conformément aux spécifications.
 
+
+
 <div  id='tp2'/>
 
 *******
 
-
-
 ## TP2 :zap:
 
-à faire
+Au cours de la deuxième semaine, j'ai complété la gestion du plateau de jeu dans l'application Dou Shou Qi. J'ai étendu la classe Board avec des fonctionnalités cruciales, notamment le comptage des pièces, l'insertion et la suppression de pièces, ainsi que la gestion des résultats à l'aide d'enums. J'ai réalisé des tests approfondis dans l'application en lignes de commande, mis en place des tests unitaires pour garantir la fiabilité des fonctions, et ajouté des tests de performance pour évaluer l'efficacité du code.
 
+ *******
+
+
+ <div  id='tp3'/>
+
+*******
+
+## TP3 :zap:
+
+à faire
 
  *******
 
