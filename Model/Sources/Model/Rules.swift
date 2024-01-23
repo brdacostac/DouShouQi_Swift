@@ -2,11 +2,11 @@ import Foundation
 
 
 protocol Rules {
-    //var occurrences: [Int] { get }
+    var occurrences: [Board:Int] { get }
     var historic: [Move] { get }
 
-    func createBoard() -> Board
-    func checkBoard(_ board: Board)
+    static func createBoard() -> Board
+    static func checkBoard(_ board: Board) -> InvalidBoardError
     func getNextPlayer() -> Owner
     func getMoves(_ board: Board, for player: Owner) -> [Move]
     func getMoves(_ board: Board, for player: Owner, fromRow: Int, fromColumn: Int) -> [Move]

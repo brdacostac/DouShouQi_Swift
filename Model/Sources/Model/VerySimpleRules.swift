@@ -2,40 +2,50 @@ import Foundation
 
 // Struct VerySimpleRules
 public struct VerySimpleRules: Rules {
+    
+    public var occurrences: [Board:Int] = [:]
     public var historic: [Move] = []
 
     func createBoard() -> Board {
-            var initialBoard = Board(withGrid: [
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .den), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .den), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-            ])!
-
-
-            let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
-            let rat2: Piece = Piece(withOwner: .player2, andAnimal: .rat)
-            let cat1: Piece = Piece(withOwner: .player1, andAnimal: .cat)
-            let cat2: Piece = Piece(withOwner: .player2, andAnimal: .cat)
-            let tiger1: Piece = Piece(withOwner: .player1, andAnimal: .tiger)
-            let tiger2: Piece = Piece(withOwner: .player2, andAnimal: .tiger)
-            let lion1: Piece = Piece(withOwner: .player1, andAnimal: .lion)
-            let lion2: Piece = Piece(withOwner: .player2, andAnimal: .lion)
-            let elephant1: Piece = Piece(withOwner: .player1, andAnimal: .elephant)
-            let elephant2: Piece = Piece(withOwner: .player2, andAnimal: .elephant)
+        let jungleEmptyCell: Cell = Cell(ofType: .jungle)
+        let denEmptyCell: Cell = Cell(ofType: .den)
         
-            initialBoard = Board(withGrid: [
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .den), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-                [Cell(ofType: .jungle), Cell(ofType: .jungle), Cell(ofType: .den), Cell(ofType: .jungle), Cell(ofType: .jungle)],
-            ])!
-
-
-            return initialBoard
-        }
+        
+        
+        let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
+        let rat2: Piece = Piece(withOwner: .player2, andAnimal: .rat)
+        let cat1: Piece = Piece(withOwner: .player1, andAnimal: .cat)
+        let cat2: Piece = Piece(withOwner: .player2, andAnimal: .cat)
+        let tiger1: Piece = Piece(withOwner: .player1, andAnimal: .tiger)
+        let tiger2: Piece = Piece(withOwner: .player2, andAnimal: .tiger)
+        let lion1: Piece = Piece(withOwner: .player1, andAnimal: .lion)
+        let lion2: Piece = Piece(withOwner: .player2, andAnimal: .lion)
+        let elephant1: Piece = Piece(withOwner: .player1, andAnimal: .elephant)
+        let elephant2: Piece = Piece(withOwner: .player2, andAnimal: .elephant)
+        
+        let rat1StartCell: Cell = Cell(ofType: .jungle, ownedBy: rat1.owner, withPiece: rat1)
+        let rat2StartCell: Cell = Cell(ofType: .jungle, ownedBy: rat2.owner, withPiece: rat2)
+        let cat1StartCell: Cell = Cell(ofType: .jungle, ownedBy: cat1.owner, withPiece: cat1)
+        let cat2StartCell: Cell = Cell(ofType: .jungle, ownedBy: cat1.owner, withPiece: cat2)
+        let tiger1StartCell: Cell = Cell(ofType: .jungle, ownedBy: tiger1.owner, withPiece: tiger1)
+        let tiger2StartCell: Cell = Cell(ofType: .jungle, ownedBy: tiger2.owner, withPiece: tiger2)
+        let lion1StartCell: Cell = Cell(ofType: .jungle, ownedBy: lion1.owner, withPiece: lion1)
+        let lion2StartCell: Cell = Cell(ofType: .jungle, ownedBy: lion2.owner, withPiece: lion2)
+        let elephant1StartCell: Cell = Cell(ofType: .jungle, ownedBy: elephant1.owner, withPiece: elephant1)
+        let elephant2StartCell: Cell = Cell(ofType: .jungle, ownedBy: elephant2.owner, withPiece: elephant2)
+        
+        
+        let board: Board = Board(withGrid: [
+            [jungleEmptyCell, lion1StartCell, denEmptyCell, tiger1StartCell, jungleEmptyCell],
+            [rat1StartCell, jungleEmptyCell, cat1StartCell, jungleEmptyCell, elephant1StartCell],
+            [jungleEmptyCell, jungleEmptyCell, jungleEmptyCell, jungleEmptyCell, jungleEmptyCell],
+            [elephant2StartCell, jungleEmptyCell, cat2StartCell, jungleEmptyCell, rat2StartCell],
+            [jungleEmptyCell, tiger2StartCell, denEmptyCell, lion2StartCell, jungleEmptyCell],
+        ])!;
+        
+        return board
+        
+    }
 
     public func getNextPlayer() -> Owner {
         // Implémentation pour déterminer le prochain joueur qui doit jouer...

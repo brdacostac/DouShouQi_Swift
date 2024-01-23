@@ -1,7 +1,8 @@
 import Foundation
 
 // Structure Board représentant un plateau du jeu avec des cellules
-public struct Board {
+public struct Board : Hashable {
+        
     public let nbRows: Int
     public let nbColumns: Int
     public private(set) var grid: [[Cell]]
@@ -33,6 +34,18 @@ public struct Board {
         self.nbColumns = columns
         self.grid = withGrid
     }
+    
+    public static func == (left: Board, right: Board) -> Bool {
+        return left.nbRows == right.nbRows &&
+        left.nbColumns == right.nbColumns &&
+        left.grid == right.grid
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+            hasher.combine(nbRows)
+            hasher.combine(nbColumns)
+            hasher.combine(grid)
+        }
     
     // Ici "of" c'est pour entiquetter le parametre
     public func countPieces(of player : Owner ) -> Int {
