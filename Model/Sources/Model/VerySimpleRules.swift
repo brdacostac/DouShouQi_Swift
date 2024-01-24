@@ -8,8 +8,7 @@ public struct VerySimpleRules: Rules {
     
     
     //Constructor
-    public init(occurrences: [Board:Int], historic: [Move]) {
-        self.occurrences = occurrences
+    public init( historic: [Move]) {
         self.historic = historic
     }
     

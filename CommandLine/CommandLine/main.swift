@@ -92,7 +92,7 @@ print(board.description)
 
 // Testes VERIFY SIMPLE RULES
 
-let simpleRules: VerySimpleRules = VerySimpleRules(occurrences: [:], historic: [])
+let simpleRules: VerySimpleRules = VerySimpleRules(historic: [])
 var initialBoard: Board = VerySimpleRules.createBoard()
 print("Teste Creation Board - VerySimpleRules")
 print(initialBoard.description)
