@@ -5,12 +5,19 @@ public struct VerySimpleRules: Rules {
     
     public var occurrences: [Board:Int] = [:]
     public var historic: [Move] = []
-
-    func createBoard() -> Board {
+    
+    
+    //Constructor
+    public init(occurrences: [Board:Int], historic: [Move]) {
+        self.occurrences = occurrences
+        self.historic = historic
+    }
+    
+    
+    //Methode pour initialiser le board avec 5 lignes et 5 colonnes
+    public static func createBoard() -> Board {
         let jungleEmptyCell: Cell = Cell(ofType: .jungle)
         let denEmptyCell: Cell = Cell(ofType: .den)
-        
-        
         
         let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
         let rat2: Piece = Piece(withOwner: .player2, andAnimal: .rat)
@@ -46,45 +53,165 @@ public struct VerySimpleRules: Rules {
         return board
         
     }
-
+    
+    //Methode qui retourne le prochain joueur à jouer
     public func getNextPlayer() -> Owner {
-        // Implémentation pour déterminer le prochain joueur qui doit jouer...
-        // Retournez le propriétaire du joueur suivant.
+        
+        if self.historic.last?.owner == .player1{
+            return .player2
+        }
+        else {
+            return .player1
+        }
     }
 
-    public func getMoves(_ board: Board, for player: Owner) -> [Move] {
-        // Implémentation pour obtenir les mouvements autorisés pour un joueur sur un plateau donné...
-        // Retournez la liste des mouvements autorisés.
+    //Methode pour recuperer les moves autorisés par 1 joueur dans le board
+    public func getMoves(_ board: Board, _ player: Owner) -> [Move] {
+        var availableMoves: [Move] = []
+        
+        for r in 0..<board.nbRows {
+            for c in 0..<board.nbColumns {
+                // Si la case contient une pièce du joueur actuel
+                if let piece = board.grid[r][c].piece, piece.owner == player {
+                    // Recuperer les moves valides d'un jouer pour un board donné, dans une cell.
+                    let pieceMoves = getMoves(board, player, fromRow: r, andColumn: c)
+                    availableMoves.append(contentsOf: pieceMoves)
+                }
+            }
+        }
+
+        return availableMoves
     }
 
-    public func getMoves(_ board: Board, for player: Owner, fromRow: Int, fromColumn: Int) -> [Move] {
-        // Implémentation pour obtenir les mouvements autorisés pour un joueur à partir d'une case spécifique...
-        // Retournez la liste des mouvements autorisés.
-    }
 
+    //Methode pour recuperer les moves autorisés par 1 joueur à partir d'une case donné
+    public func getMoves(_ board: Board, _ player: Owner, fromRow: Int, andColumn: Int) -> [Move] {
+        var availableMoves: [Move] = []
+            
+        let possibleDirections: [(Int, Int)] = [
+            (0, 1), // Droit
+            (0, -1), // Gauche
+            (1, 0), // Haut
+            (-1, 0) // Bas
+        ]
+        
+        for direction in possibleDirections {
+            let newRow = fromRow + direction.0
+            let newColumn = andColumn + direction.1
+            
+            // Si la methode isMoveValid return true alors on ajoute le move dans la liste
+            if isMoveValid(board, fromRow: fromRow, fromColumn: andColumn, toRow: newRow, toColumn: newColumn) {
+                let move = Move(owner: player, rowOrigin: fromRow, columnOrigin: andColumn, rowDestination: newRow, columnDestination: newColumn)
+                availableMoves.append(move)
+            }
+        }
+        
+        return availableMoves
+    }
+    
+    //Methode pour verifier si un mouvement d'une piece est valide
     public func isMoveValid(_ board: Board, fromRow: Int, fromColumn: Int, toRow: Int, toColumn: Int) -> Bool {
-        // Implémentation pour vérifier si un mouvement est autorisé d'une cellule à une autre...
-        // Retournez true si le mouvement est autorisé, sinon false.
+        // Verifier les nbRows et le nbColumns
+        guard fromRow >= 0 && fromRow < board.nbRows && fromColumn >= 0 && fromColumn < board.nbColumns &&
+              toRow >= 0 && toRow < board.nbRows && toColumn >= 0 && toColumn < board.nbColumns else {
+            return false
+        }
+
+        // Récupérer les cellules d'origine et de destination en fonction des coordonnées données
+        let startCell = board.grid[fromRow][fromColumn]
+        let nextCell = board.grid[toRow][toColumn]
+
+        // Ici on va vérifier si la cellule d'origine contient une pièce du joueur actuel
+        guard let piece = startCell.piece, piece.owner == getNextPlayer() else {
+            return false
+        }
+
+        // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
+        guard startCell.piece?.owner != nextCell.piece?.owner else {
+            return false
+        }
+
+        return true
     }
 
     public func isMoveValid(_ board: Board, move: Move) -> Bool {
-        // Implémentation pour vérifier si un mouvement est autorisé...
-        // Retournez true si le mouvement est autorisé, sinon false.
+        //on utilise la méthode en haut
+        return isMoveValid(board, fromRow: move.rowOrigin, fromColumn: move.columnOrigin, toRow: move.rowDestination, toColumn: move.columnDestination)
+
+    }
+    
+    //Methode pour verifier si le jeu a fini
+    public func isGameOver(_ board: Board, lastMoveRow: Int, lastMoveColumn: Int) -> (Bool, Result) {
+        //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
+        let lastMoveCell = board.grid[lastMoveRow][lastMoveColumn]
+        if lastMoveCell.cellType == .den {
+            let currentPlayer = getNextPlayer()
+            let opponent = (currentPlayer == .player1) ? Owner.player2 : Owner.player1
+            
+            if (lastMoveCell.piece?.owner == opponent){
+                return (true, .winner(opponent, .denReached))
+            }
+        }
+        
+        //Ici on va verifier si un des joueurs a mangé tout les pieces de son adversaire
+        let (player1Pieces, player2Pieces) = board.countPiecesTwoPlayers()
+        
+        if player1Pieces == 0 && player2Pieces == 0 {
+            return (true, .winner(.player1, .noMorePieces))  // Les deux joueurs n'ont plus de pièces
+        } else if player1Pieces == 0 {
+            return (true, .winner(.player2, .noMorePieces))  // Le joueur 1 n'a plus de pièces
+        } else if player2Pieces == 0 {
+            return (true, .winner(.player1, .noMorePieces))  // Le joueur 2 n'a plus de pièces
+        }
+
+        //Ici on va verifier si l'adversaire est coincé
+        let opponent = (getNextPlayer() == .player1) ? Owner.player2 : Owner.player1
+        let availableMoves = getMoves(board, opponent)
+
+        if availableMoves.isEmpty {
+            return (true, .winner(opponent, .noMovesLeft))  // L'adversaire n'a plus de coups valides
+        } else {
+            return (false, .notFinished)  // L'adversaire a encore des coups valides
+        }
+
+    }
+    
+    //Méthode qui va stocker les coups réalisés
+    public mutating func playedMove(_ move: Move, fromBoard: Board, toBoard: Board) {
+        //Ajouter le coup dans l'historique
+        historic.append(move)
     }
 
-    public func isGameOver(_ board: Board, lastRow: Int, lastColumn: Int) -> (Bool, Result) {
-        // Implémentation pour vérifier si la partie est terminée...
-        // Retournez un tuple indiquant si la partie est terminée et le résultat.
+    public static func checkBoard(_ board: Board) -> InvalidBoardError {
+        let expectedRows = 5
+        let expectedColumns = 5
+        
+        //Le nombre de lignes et de colonnes
+        guard board.nbRows == expectedRows && board.nbColumns == expectedColumns else {
+            return .badDimensions(board.nbRows, board.nbColumns)
+        }
+        
+        //Le player 1 est sur le bon emplacement dans le board
+        guard board.grid[0][2].cellType == CellType.den else {
+            return .badCellType(.den, 0, 2)
+        }
+        
+        //vérifier l'emplacement de la den du joueur 1 sur le board
+        guard board.grid[4][2].cellType == CellType.den else {
+            return .badCellType(.den, 4, 2)
+        }
+        
+        // vérifier le nombre de pièces de chaque joueur
+        let player1Pieces = board.countPieces(of: .player1)
+        let player2Pieces = board.countPieces(of: .player2)
+        
+        guard player1Pieces == 5 && player2Pieces == 5 else {
+            return .numberOfPiece(piecesPlayer1: player1Pieces, piecesPlayer2: player2Pieces)
+        }
+        
+        
+        return .noError
     }
 
-    public func playedMove(_ move: Move, fromBoard: Board, toBoard: Board) {
-        // Implémentation pour mettre à jour l'état du jeu après qu'un coup a été joué...
-        // Effectuez les opérations nécessaires.
-    }
-
-    public func checkBoard(_ board: Board) throws {
-        // Implémentation spécifique pour vérifier si un plateau est valide selon les règles du jeu simplifiées...
-        // Lancez une erreur `InvalidBoardError` avec le motif approprié si le plateau n'est pas valide.
-    }
 }
 

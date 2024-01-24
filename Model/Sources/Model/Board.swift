@@ -29,7 +29,6 @@ public struct Board : Hashable {
         }
         
         
-        
         self.nbRows = withGrid.count
         self.nbColumns = columns
         self.grid = withGrid

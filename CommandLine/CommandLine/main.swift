@@ -90,6 +90,40 @@ print(board.description)
 
 
 
+// Testes VERIFY SIMPLE RULES
+
+let simpleRules: VerySimpleRules = VerySimpleRules(occurrences: [:], historic: [])
+var initialBoard: Board = VerySimpleRules.createBoard()
+print("Teste Creation Board - VerySimpleRules")
+print(initialBoard.description)
+
+//Vérification si le board est valide
+if(VerySimpleRules.checkBoard(initialBoard) != .noError){
+    print("ERR : VerySimpleRules : Board invalide")
+}
+print("VerySimpleRules : Board valide")
+
+//Afficher le prochain jouer
+var player: Owner = simpleRules.getNextPlayer()
+print("Next Player :" ,player)
+
+//Afficher les prochains couts d'un player
+let nextMovesPlayer = simpleRules.getMoves(initialBoard, .player1)
+print("Prochains coups du joueur 1 :")
+print(nextMovesPlayer)
+
+//Afficher les prochains couts d'un player à partir de la case 0,1
+let nextMovesPlayerCase = simpleRules.getMoves(initialBoard, .player1, fromRow: 0, andColumn: 1)
+print("Coups à realiser du joueur 1 à partir de la case 0,1 : ")
+print(nextMovesPlayerCase)
+
+//Vérification si la partie est fini
+let gameOver: (Bool, Result) = simpleRules.isGameOver(initialBoard, lastMoveRow: 0, lastMoveColumn: 1)
+print("Resultat de la partie: ", gameOver)
+
+
+
+
 
 
 
