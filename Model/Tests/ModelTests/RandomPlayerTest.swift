@@ -3,11 +3,6 @@ import Model
 
 final class RandomPlayerTests: XCTestCase {
 
-    var player: RandomPlayer!
-    
-    override func setUp() {
-        player = RandomPlayer(withName: "RandomPlayer", andId: .player1)
-    }
     
     /// Test du initialiseur de la classe RandomPlayer
     func testInitializer() {
@@ -26,7 +21,8 @@ final class RandomPlayerTests: XCTestCase {
         let rules = VerySimpleRules()
         let board = VerySimpleRules.createBoard()
         
-        
+        // Création d'une instance de RandomPlayer
+        let player = RandomPlayer(withName: "RandomPlayer", andId: .player1)!
         
         let move1 = Move(owner: .player1, rowOrigin: 1, columnOrigin: 2, rowDestination: 1, columnDestination: 3)
         let move2 = Move(owner: .player1, rowOrigin: 1, columnOrigin: 2, rowDestination: 1, columnDestination: 1)
@@ -35,9 +31,12 @@ final class RandomPlayerTests: XCTestCase {
         
         let movesExpected = [move1, move2, move3, move4]
         
-        let randomMove = player.chooseMove(in: board, with: rules)!
-        
-        XCTAssertTrue(movesExpected.contains(randomMove))
+        // Utilisation de la méthode chooseMove du joueur
+        if let randomMove = player.chooseMove(in: board, with: rules) {
+            XCTAssertTrue(movesExpected.contains(randomMove))
+        } else {
+            XCTFail("Le mouvement choisi ne devrait pas être nul.")
+        }
     }
     
 }

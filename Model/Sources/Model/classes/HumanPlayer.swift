@@ -23,6 +23,6 @@ public class HumanPlayer: Player {
     ///    - rules : Les regles choisies pour le jeu
     /// - Returns : Le move choisi ou nil si pas de move choisi
     public override func chooseMove(in board: Board, with rules: Rules) -> Move? {
-        return nil
+        return input(self)
     }
 }
