@@ -8,10 +8,8 @@ public struct VerySimpleRules: Rules {
     
     
     ///Constructor
-    public init(historic: [Move]) {
-        self.historic = historic
+    public init() {
     }
-    
     
     ///Methode pour initialiser le board avec 5 lignes et 5 colonnes
     ///

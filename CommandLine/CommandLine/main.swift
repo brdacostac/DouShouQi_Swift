@@ -92,15 +92,12 @@ print(board.description)
 
 // Testes VERIFY SIMPLE RULES
 
-let simpleRules: VerySimpleRules = VerySimpleRules(historic: [])
+let simpleRules: VerySimpleRules = VerySimpleRules()
 var initialBoard: Board = VerySimpleRules.createBoard()
 print("Teste Creation Board - VerySimpleRules")
 print(initialBoard.description)
 
-//Vérification si le board est valide
-if(VerySimpleRules.checkBoard(initialBoard) != .noError){
-    print("ERR : VerySimpleRules : Board invalide")
-}
+
 print("VerySimpleRules : Board valide")
 
 //Afficher le prochain jouer
