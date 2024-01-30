@@ -1,19 +1,21 @@
 import Foundation
 
-// Struct VerySimpleRules
+/// Struct VerySimpleRules
 public struct VerySimpleRules: Rules {
     
     public var occurrences: [Board:Int] = [:]
     public var historic: [Move] = []
     
     
-    //Constructor
-    public init( historic: [Move]) {
+    ///Constructor
+    public init(historic: [Move]) {
         self.historic = historic
     }
     
     
-    //Methode pour initialiser le board avec 5 lignes et 5 colonnes
+    ///Methode pour initialiser le board avec 5 lignes et 5 colonnes
+    ///
+    /// - Returns : Un nouveau board du jeu
     public static func createBoard() -> Board {
         let jungleEmptyCell: Cell = Cell(ofType: .jungle)
         let denEmptyCell: Cell = Cell(ofType: .den)
@@ -53,7 +55,9 @@ public struct VerySimpleRules: Rules {
         
     }
     
-    //Methode qui retourne le prochain joueur à jouer
+    ///Methode qui retourne le prochain joueur à jouer
+    ///
+    /// - Returns : Le player que doit jouer
     public func getNextPlayer() -> Owner {
         
         if self.historic.last?.owner == .player1{
@@ -64,7 +68,11 @@ public struct VerySimpleRules: Rules {
         }
     }
 
-    //Methode pour recuperer les moves autorisés par 1 joueur dans le board
+    ///Methode pour recuperer les moves autorisés par 1 joueur dans le board
+    ///
+    /// - Parameters:
+    ///  - board : Le plateau du jeu actuel
+    ///  - player : Le player actuel
     public func getMoves(_ board: Board, _ player: Owner) -> [Move] {
         var availableMoves: [Move] = []
         
@@ -83,8 +91,15 @@ public struct VerySimpleRules: Rules {
     }
 
 
-    //Methode pour recuperer les moves autorisés par 1 joueur à partir d'une case donné
-    public func getMoves(_ board: Board, _ player: Owner, fromRow: Int, andColumn: Int) -> [Move] {
+    ///Methode pour recuperer les moves autorisés par 1 joueur à partir d'une case donné
+    ///
+    /// - Parameters
+    ///    - board : Le plateau du jeu actuel
+    ///    - player : Le player actuel
+    ///    - row : La ligne de départ
+    ///    - column : La colonne de depart
+    /// - Returns : La liste de mouvements autorisés
+    public func getMoves(_ board: Board, _ player: Owner, fromRow row: Int, andColumn column: Int) -> [Move] {
         var availableMoves: [Move] = []
             
         let possibleDirections: [(Int, Int)] = [
@@ -95,12 +110,12 @@ public struct VerySimpleRules: Rules {
         ]
         
         for direction in possibleDirections {
-            let newRow = fromRow + direction.0
-            let newColumn = andColumn + direction.1
+            let newRow = row + direction.0
+            let newColumn = column + direction.1
             
             // Si la methode isMoveValid return true alors on ajoute le move dans la liste
-            if isMoveValid(board, fromRow: fromRow, fromColumn: andColumn, toRow: newRow, toColumn: newColumn) {
-                let move = Move(owner: player, rowOrigin: fromRow, columnOrigin: andColumn, rowDestination: newRow, columnDestination: newColumn)
+            if isMoveValid(board, fromRow: row, fromColumn: column, toRow: newRow, toColumn: newColumn) {
+                let move = Move(owner: player, rowOrigin: row, columnOrigin: column, rowDestination: newRow, columnDestination: newColumn)
                 availableMoves.append(move)
             }
         }
@@ -108,7 +123,15 @@ public struct VerySimpleRules: Rules {
         return availableMoves
     }
     
-    //Methode pour verifier si un mouvement d'une piece est valide
+    ///Methode pour verifier si un mouvement d'une piece est valide
+    ///
+    /// - Parameters
+    ///  - board : Le plateau actuel
+    ///  - fromRow: La ligne de depart du move actuel
+    ///  - fromColumn: La colone de depart du move actuel
+    ///  - toRow : La ligne aprés le mouvement efectué
+    ///  - toColumn : La colone aprés le mouvement efectué
+    /// - Returns : 'true' si le movement est valide ou 'false' sinon
     public func isMoveValid(_ board: Board, fromRow: Int, fromColumn: Int, toRow: Int, toColumn: Int) -> Bool {
         // Verifier les nbRows et le nbColumns
         guard fromRow >= 0 && fromRow < board.nbRows && fromColumn >= 0 && fromColumn < board.nbColumns &&
@@ -132,14 +155,26 @@ public struct VerySimpleRules: Rules {
 
         return true
     }
-
+    
+    ///Methode pour verifier si un mouvement spécifique d'une piece est valide sur un board donné
+    ///
+    /// - Parameters
+    ///  - board : Le plateau actuel
+    ///  - move : Le mouvement à verifier
+    /// - Returns : 'true' si le movement est valide ou 'false' sinon
     public func isMoveValid(_ board: Board, move: Move) -> Bool {
         //on utilise la méthode en haut
         return isMoveValid(board, fromRow: move.rowOrigin, fromColumn: move.columnOrigin, toRow: move.rowDestination, toColumn: move.columnDestination)
 
     }
     
-    //Methode pour verifier si le jeu a fini
+    ///Methode pour verifier si le jeu a fini utiliser les parametized labels
+    ///
+    /// - Parameters
+    ///  - board : Le plateau actuel
+    ///  - lastMoveRow : La ligne du dernier mouvement
+    ///  - lastMoveColumn: La colone du dernier mouvement
+    /// - Returns : un tuble avec un boolean pour savoir si la partie est fini et le resultat de la partie
     public func isGameOver(_ board: Board, lastMoveRow: Int, lastMoveColumn: Int) -> (Bool, Result) {
         //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
         let lastMoveCell = board.grid[lastMoveRow][lastMoveColumn]
@@ -175,41 +210,86 @@ public struct VerySimpleRules: Rules {
 
     }
     
-    //Méthode qui va stocker les coups réalisés
+    ///Méthode qui va stocker les coups réalisés
+    /// - Parameters :
+    ///  - move : Le mouvement actuel
+    ///  - board: Le tableau actuel
+    ///  - toBoard : Le tableau aprés le mouvement effectué
     public mutating func playedMove(_ move: Move, fromBoard: Board, toBoard: Board) {
         //Ajouter le coup dans l'historique
         historic.append(move)
+        
     }
-
-    public static func checkBoard(_ board: Board) -> InvalidBoardError {
+    
+    /// Méthode qui va verifier si le board du jeu est valide
+    ///
+    ///  - Parameters :
+    ///    - board : Le board a verifier
+    ///  - Returns: Un erreur d'invalidité si jamais il en a, sinon on va returner 'true'
+    public static func checkBoard(_ board: Board) throws -> Bool {
         let expectedRows = 5
         let expectedColumns = 5
         
         //Le nombre de lignes et de colonnes
         guard board.nbRows == expectedRows && board.nbColumns == expectedColumns else {
-            return .badDimensions(board.nbRows, board.nbColumns)
+            throw InvalidBoardError.badDimensions(board.nbRows, board.nbColumns)
         }
         
-        //Le player 1 est sur le bon emplacement dans le board
-        guard board.grid[0][2].cellType == CellType.den else {
-            return .badCellType(.den, 0, 2)
-        }
         
         //vérifier l'emplacement de la den du joueur 1 sur le board
-        guard board.grid[4][2].cellType == CellType.den else {
-            return .badCellType(.den, 4, 2)
+        guard board.grid[0][2].cellType == CellType.den else {
+            throw InvalidBoardError.badCellType(.den, 0, 2)
         }
+        
+        //vérifier l'emplacement de la den du joueur 2 sur le board
+        guard board.grid[4][2].cellType == CellType.den else {
+            throw InvalidBoardError.badCellType(.den, 4, 2)
+        }
+        
+        var piecesNumber: [Piece:Int] = [:]
+        
+        //vérifier chaque emplacement du board
+        for row in 0..<board.grid.count {
+            for column in 0..<board.grid[row].count {
+                let cell = board.grid[row][column]
+                
+                //vérifier que pour chaque emplacement du board on a pas type water
+                if cell.cellType == .water {
+                    throw InvalidBoardError.badCellType(.water, row, column)
+                }
+                //vérifier que pour chaque emplacement du board on a pas type trap
+                if cell.cellType == .trap {
+                    throw InvalidBoardError.badCellType(.trap, row, column)
+                }
+                
+                if let piece = cell.piece {
+                    
+                    //vérifier qu'il n'y a pas multiple ocurrences de la même piece
+                    piecesNumber[piece,default: 0] += 1
+                    
+                    guard piecesNumber[piece]! <= 1 else {
+                        throw InvalidBoardError.multipleOccurencesOfSamePiece(piece)
+                    }
+                    
+                    //vérifier que chaque piece contient un player
+                    guard piece.owner != .noOne else{
+                        throw InvalidBoardError.pieceWithNoOwner(piece)
+                    }
+                }
+            }
+        }
+        
         
         // vérifier le nombre de pièces de chaque joueur
         let player1Pieces = board.countPieces(of: .player1)
         let player2Pieces = board.countPieces(of: .player2)
         
         guard player1Pieces == 5 && player2Pieces == 5 else {
-            return .numberOfPiece(piecesPlayer1: player1Pieces, piecesPlayer2: player2Pieces)
+            throw InvalidBoardError.numberOfPiece(piecesPlayer1: player1Pieces, piecesPlayer2: player2Pieces)
         }
         
         
-        return .noError
+        return true
     }
 
 }

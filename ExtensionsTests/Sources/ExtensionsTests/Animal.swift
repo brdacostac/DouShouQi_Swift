@@ -1,7 +1,7 @@
 import Foundation
 import Model
 
-//Extension de la classe Animal du Model pour l'affichage avec un emoji
+///Extension de la classe Animal du Model pour l'affichage avec un emoji
 public extension Model.Animal{
     var symbol: String{
         switch self{

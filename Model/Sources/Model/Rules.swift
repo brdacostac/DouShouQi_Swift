@@ -6,7 +6,7 @@ protocol Rules {
     var historic: [Move] { get }
 
     static func createBoard() -> Board
-    static func checkBoard(_ board: Board) -> InvalidBoardError
+    static func checkBoard(_ board: Board) throws -> Bool
     func getNextPlayer() -> Owner
     func getMoves(_ board: Board, _ player: Owner) -> [Move]
     func getMoves(_ board: Board, _ player: Owner, fromRow: Int, andColumn: Int) -> [Move]
