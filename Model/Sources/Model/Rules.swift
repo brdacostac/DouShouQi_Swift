@@ -1,7 +1,7 @@
 import Foundation
 
 ///Protocole representant les regles du jeu
-protocol Rules {
+public protocol Rules {
     var occurrences: [Board:Int] { get }
     var historic: [Move] { get }
 

@@ -119,6 +119,21 @@ let gameOver: (Bool, Result) = simpleRules.isGameOver(initialBoard, lastMoveRow:
 print("Resultat de la partie: ", gameOver)
 
 
+//TESTS PLAYER, HUMANPLAYER et RANDOMPLAYER
+
+let rulesPlayer = VerySimpleRules()
+var boardPlayer = VerySimpleRules.createBoard()
+
+print(boardPlayer.description)
+
+let botPlayer = RandomPlayer(withName: "BotBrasil", andId: .player1)
+
+
+
+
+
+
+
 
 
 
