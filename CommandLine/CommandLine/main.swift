@@ -126,7 +126,43 @@ var boardPlayer = VerySimpleRules.createBoard()
 
 print(boardPlayer.description)
 
-let botPlayer = RandomPlayer(withName: "BotBrasil", andId: .player1)
+func userInput(humanPlayer : HumanPlayer) -> Move {
+    print("Entrer le mouvement:")
+    print("Ligne de depart:")
+    let fromRow = Int(readLine() ?? "") ?? 0
+    
+    print("Colonne de depart:")
+    let fromColumn = Int(readLine() ?? "") ?? 0
+    
+    print("Pour aller à la ligne:")
+    let toRow = Int(readLine() ?? "") ?? 0
+    
+    print("Pour aller à la colonne:")
+    let toColumn = Int(readLine() ?? "") ?? 0
+    
+    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
+}
+
+if let player1 = HumanPlayer(withName: "Bruno", andId: .player1, andInputMethod: userInput) {
+    let move1 = player1.input(player1)
+    print(move1)
+    
+    if let move1 = player1.chooseMove(in: board, with: rulesPlayer) {
+        print(move1)
+    }
+}
+
+if let bot = RandomPlayer(withName: "BotDoBrasil", andId: .player2) {
+    if let move2 = bot.chooseMove(in: board, with: rulesPlayer) {
+        print(move2)
+    } else {
+        print("Le random player n'a pas de moves valides")
+    }
+}
+
+
+
+
 
 
 

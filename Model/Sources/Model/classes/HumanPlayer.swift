@@ -10,7 +10,7 @@ public class HumanPlayer: Player {
     /// - Parameters :
     ///    - name : Nom du joueur
     ///    - id : Id du joueur
-    ///   - inputMethod: La methode input pour un player
+    ///    - input: La methode input pour un player
     public init?(withName name : String, andId id : Owner, andInputMethod input: @escaping (HumanPlayer) -> Move) {
         self.input = input
         super.init(withName: name, andId: id)

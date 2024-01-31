@@ -1,6 +1,6 @@
 import Foundation
 
-// Structure Board représentant un plateau du jeu avec des cellules
+/// Structure Board représentant un plateau du jeu avec des cellules
 public struct Board : Hashable {
         
     public let nbRows: Int

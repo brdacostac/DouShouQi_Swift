@@ -145,6 +145,33 @@ public struct VerySimpleRules: Rules {
         guard let piece = startCell.piece, piece.owner == getNextPlayer() else {
             return false
         }
+        
+        
+        //Ici on va vérifier si l'animal peut manger l'animal adversaire
+        guard let startPiece = startCell.piece, let nextPiece = nextCell.piece else {
+            return false
+        }
+        let startAnimal = startPiece.animal
+        let nextAnimal = nextPiece.animal
+
+        if startAnimal == .rat && nextAnimal == .elephant {
+            // Le rat peut manger l'éléphant, donc le mouvement est valide
+        } else {
+            // Sinon, utilisez la logique de comparaison des forces
+            guard startAnimal.rawValue <= nextAnimal.rawValue else {
+                return false
+            }
+        }
+        
+        // On verifie qu'on ne peut pas faire un mouvement en diagonal et aussi que la piece à bougé
+        guard (abs(toRow - fromRow) == 1 && toColumn == fromColumn) || (toRow == fromRow && abs(toColumn - fromColumn) == 1) && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 2 && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 0 else {
+            return false
+        }
+
+        // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
+        guard startPiece.owner != nextPiece.owner else {
+            return false
+        }
 
         // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
         guard startCell.piece?.owner != nextCell.piece?.owner else {
