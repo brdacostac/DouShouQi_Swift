@@ -193,7 +193,7 @@ public struct VerySimpleRules: Rules {
         
         //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
         if lastMoveCell.cellType == .den {
-            if (lastMoveCell.piece?.owner == opponent){
+            if (lastMoveCell.piece?.owner != currentPlayer){
                 return (true, .winner(opponent, .denReached))
             }
         }

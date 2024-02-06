@@ -50,13 +50,13 @@ final class VerySimpleRulesTest: XCTestCase {
     
     /// Tests move valide
     func testIsMoveValid_ValidMove() throws {
-        XCTAssertTrue(rules.isMoveValid(board, fromRow: 0, fromColumn: 1, toRow: 1, toColumn: 1))
+        XCTAssertTrue(try rules.isMoveValid(board, fromRow: 0, fromColumn: 1, toRow: 1, toColumn: 1))
     }
     
     func testIsMoveValidFromMove_ValidMove() throws {
         let move: Move = Move(owner: .player1, rowOrigin: 0, columnOrigin: 1, rowDestination: 1, columnDestination: 1)
         
-        XCTAssertTrue(rules.isMoveValid( board, move:move))
+        XCTAssertTrue(try rules.isMoveValid( board, move:move))
     }
     
     func testGetMovesForPlayer() throws{
@@ -66,13 +66,13 @@ final class VerySimpleRulesTest: XCTestCase {
         XCTAssertTrue(player1Moves.count > 0)
     }
     
-    func testValidMove() {
+    func testValidMove() throws {
         let fromRow = 1
         let fromColumn = 2
         let toRow = 2
         let toColumn = 2
 
-        let isValidMove = rules.isMoveValid(board, fromRow: fromRow, fromColumn: fromColumn, toRow: toRow, toColumn: toColumn)
+        let isValidMove = try rules.isMoveValid(board, fromRow: fromRow, fromColumn: fromColumn, toRow: toRow, toColumn: toColumn)
 
         XCTAssertTrue(isValidMove, "Le mouvement devrait être valide")
     }
@@ -85,15 +85,15 @@ final class VerySimpleRulesTest: XCTestCase {
         XCTAssertEqual(rules.historic.count, 1)
     }
     
-    func testIsGameOver_NoMovesLeft() {
+    func testIsGameOver() {
 
-        let move1 = Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 0, columnDestination: 4)
+        let move1 = Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 4, columnDestination: 2)
         rules.playedMove(move1, fromBoard: board, toBoard: board)
-
-        let (isOver, result) = rules.isGameOver(board, lastMoveRow: move1.rowDestination, lastMoveColumn: move1.columnDestination)
-
-        XCTAssertTrue(isOver, "Le jeu est terminé")
-        XCTAssertEqual(result, .winner(.player1, .noMovesLeft), "Le jouer 1 n'a plus de mouvement")
+        
+        let (isOver, result) = rules.isGameOver(board, lastMoveRow: 4, lastMoveColumn: 2)
+        
+        XCTAssertTrue(isOver)
+        XCTAssertEqual(result, .winner(.player1, .denReached))
     }
     
     
