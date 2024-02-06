@@ -58,7 +58,7 @@ var board: Board = Board(withGrid: [
     [jungleCell, cat2StartCell, jungleCell, trapCell, jungleCell, dog2StartCell, jungleCell],
     [tiger2StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion2StartCell]
 ])!
-
+/*
 // Affichage du tableau dans le console
 var test = board.description
 print(test)
@@ -119,49 +119,169 @@ let gameOver: (Bool, Result) = simpleRules.isGameOver(initialBoard, lastMoveRow:
 print("Resultat de la partie: ", gameOver)
 
 
+
 //TESTS PLAYER, HUMANPLAYER et RANDOMPLAYER
 
 let rulesPlayer = VerySimpleRules()
 var boardPlayer = VerySimpleRules.createBoard()
 
 print(boardPlayer.description)
+ */
 
-func userInput(humanPlayer : HumanPlayer) -> Move {
-    print("Entrer le mouvement:")
-    print("Ligne de depart:")
-    let fromRow = Int(readLine() ?? "") ?? 0
-    
-    print("Colonne de depart:")
-    let fromColumn = Int(readLine() ?? "") ?? 0
-    
-    print("Pour aller à la ligne:")
-    let toRow = Int(readLine() ?? "") ?? 0
-    
-    print("Pour aller à la colonne:")
-    let toColumn = Int(readLine() ?? "") ?? 0
-    
-    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
-}
 
-if let player1 = HumanPlayer(withName: "Bruno", andId: .player1, andInputMethod: userInput) {
-    let move1 = player1.input(player1)
-    print(move1)
+
+//TESTS PLAYER, HUMANPLAYER et RANDOMPLAYER
+
+//let rulesPlayer = VerySimpleRules()
+//var boardPlayer = VerySimpleRules.createBoard()
+
+
+//func userInput(humanPlayer : HumanPlayer) -> Move {
+//    print("Entrer le mouvement:")
+//    print("Ligne de depart:")
+//    let fromRow = Int(readLine() ?? "") ?? 0
+//
+//    print("Colonne de depart:")
+//    let fromColumn = Int(readLine() ?? "") ?? 0
+//
+//    print("Pour aller à la ligne:")
+//    let toRow = Int(readLine() ?? "") ?? 0
+//
+//    print("Pour aller à la colonne:")
+//    let toColumn = Int(readLine() ?? "") ?? 0
+//
+//    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
+//}
+//
+//if let player1 = HumanPlayer(withName: "Bruno", andId: .player1, andInputMethod: userInput) {
+//    let move1 = player1.input(player1)
+//    print(move1)
+//
+//    if let move1 = player1.chooseMove(in: board, with: rulesPlayer) {
+//        print(move1)
+//    }
+//}
+
+//if let bot = RandomPlayer(withName: "BotDoBrasil", andId: .player2) {
+//    if let move2 = bot.chooseMove(in: board, with: rulesPlayer) {
+//        print(move2)
+//    } else {
+//        print("Le random player n'a pas de moves valides")
+//    }
+//}
+
+
+// - VARIABLES POUR LA BOUCLE -
+
+var rules = VerySimpleRules()
+var leBoard = VerySimpleRules.createBoard()
+
+print("starting board : ")
+print(leBoard.description)
+
+var lastRow: Int = 0
+var lastColumn: Int = 0
+
+var player1 = RandomPlayer(withName: "Bruno", andId: .player1)!
+var player2 = RandomPlayer(withName: "RandomBrazilian", andId: .player2)!
+
+var prochainJoueur: Owner
+var joueurActuel: Player = player1
+
+
+// - BOUCLE DU JEU -
+while(!rules.isGameOver(leBoard, lastMoveRow: lastRow, lastMoveColumn: lastColumn).0) {
     
-    if let move1 = player1.chooseMove(in: board, with: rulesPlayer) {
-        print(move1)
+    // Obtenir le prochain joueur
+    prochainJoueur = rules.getNextPlayer()
+    joueurActuel = player1.id == prochainJoueur ? player1 : player2
+    
+    var mouvementEstValide = false // Indicateur de validité du mouvement
+
+    // Boucler jusqu'à ce que le mouvement soit valide ou qu'il n'y ait plus de mouvements possibles
+    while mouvementEstValide == false {
+        // Choisir un mouvement
+        if let move = joueurActuel.chooseMove(in: leBoard, with: rules) {
+            // Un mouvement a été trouvé
+            print("un mouvement a été trouvé :  \(move)")
+
+            // Vérifier s'il est valide
+            do {
+                mouvementEstValide = try rules.isMoveValid(leBoard, move: move)
+                
+                // Le mouvement est valide car aucune erreur n'a été détectée
+                print("mouvement valide : \(move)")
+                
+                // Sauvegarder le plateau avant le mouvement
+                let plateauAvantMouvement = leBoard
+                
+                // Jouer le mouvement
+                let ligneDestination = move.rowDestination
+                let colonneDestination = move.columnDestination
+                let ligneOrigine = move.rowOrigin
+                let colonneOrigine = move.columnOrigin
+                
+                print("cell d'origine \(leBoard.grid[ligneOrigine][colonneOrigine])")
+                print("cell de destination \(leBoard.grid[ligneDestination][colonneDestination])")
+                
+                // Vider la cellule de destination
+                if let _ = leBoard.grid[ligneDestination][colonneDestination].piece {
+                    // S'il y a une pièce, la retirer
+                    let resultatRetrait = leBoard.removePiece(atRow: ligneDestination, andColumn: colonneDestination)
+                    guard resultatRetrait == .ok else {
+                        print("échec du retrait de la pièce de la cellule de destination, raison: \(resultatRetrait)")
+                        print("ligne destination: \(ligneDestination)")
+                        print("colonne destination: \(colonneDestination) \n")
+                        
+                        break  // Arrêter le jeu
+                    }
+                }
+                
+                // Insérer la pièce dans la nouvelle cellule
+                let pieceAMouvoir = leBoard.grid[ligneOrigine][colonneOrigine].piece! // Le mouvement est valide donc il y a forcément une pièce
+                let resultatInsertion = leBoard.insertPiece(piece: pieceAMouvoir, atRow: ligneDestination, andColumn: colonneDestination)
+                guard resultatInsertion == .ok else {
+                    print("échec de l'insertion de la pièce dans la cellule de destination, raison: \(resultatInsertion)")
+                    print("ligne destination: \(ligneDestination)")
+                    print("colonne destination: \(colonneDestination) \n")
+                    
+                    break // Arrêter le jeu
+                }
+                
+                // Enlever la pièce de la cellule d'origine
+                let resultatRetrait = leBoard.removePiece(atRow: ligneOrigine, andColumn: colonneOrigine)
+                guard resultatRetrait == .ok else {
+                    print("échec du retrait de la pièce de la cellule d'origine, raison: \(resultatRetrait) \n")
+                    print("ligne origine: \(ligneOrigine)")
+                    print("colonne origine: \(colonneOrigine) \n")
+                    
+                    break // Arrêter le jeu
+                }
+                
+                // Jouer fait son mouvement
+                rules.playedMove(move, fromBoard: plateauAvantMouvement, toBoard: leBoard)
+                
+            } catch GameError.invalidMove {
+                print("Le mouvement choisi n'est pas valide, veuillez réessayer.")
+                continue
+            }
+        } else {
+            // Aucun mouvement trouvé, donc la partie est terminée sans mouvements restants
+            print("le mouvement était nul")
+        }
+        
+        // Un mouvement a été joué
+        print("Nouveau Plateau")
+        print(leBoard.description)
+        print("\n")
     }
+    
+    print("tour suivant...")
 }
 
-if let bot = RandomPlayer(withName: "BotDoBrasil", andId: .player2) {
-    if let move2 = bot.chooseMove(in: board, with: rulesPlayer) {
-        print(move2)
-    } else {
-        print("Le random player n'a pas de moves valides")
-    }
-}
-
-
-
+print("PARTIE TERMINÉE")
+let result = rules.isGameOver(leBoard, lastMoveRow: lastRow, lastMoveColumn: lastColumn)
+print(result)
 
 
 

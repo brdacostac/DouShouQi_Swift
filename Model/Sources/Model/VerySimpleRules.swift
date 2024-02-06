@@ -9,6 +9,7 @@ public struct VerySimpleRules: Rules {
     
     ///Constructor
     public init() {
+        
     }
     
     ///Methode pour initialiser le board avec 5 lignes et 5 colonnes
@@ -111,10 +112,14 @@ public struct VerySimpleRules: Rules {
             let newRow = row + direction.0
             let newColumn = column + direction.1
             
-            // Si la methode isMoveValid return true alors on ajoute le move dans la liste
-            if isMoveValid(board, fromRow: row, fromColumn: column, toRow: newRow, toColumn: newColumn) {
-                let move = Move(owner: player, rowOrigin: row, columnOrigin: column, rowDestination: newRow, columnDestination: newColumn)
-                availableMoves.append(move)
+            do{
+                // Si la methode isMoveValid return true alors on ajoute le move dans la liste
+                if try isMoveValid(board, fromRow: row, fromColumn: column, toRow: newRow, toColumn: newColumn) {
+                    let move = Move(owner: player, rowOrigin: row, columnOrigin: column, rowDestination: newRow, columnDestination: newColumn)
+                    availableMoves.append(move)
+                }
+            }catch{
+                
             }
         }
         
@@ -130,53 +135,34 @@ public struct VerySimpleRules: Rules {
     ///  - toRow : La ligne aprés le mouvement efectué
     ///  - toColumn : La colone aprés le mouvement efectué
     /// - Returns : 'true' si le movement est valide ou 'false' sinon
-    public func isMoveValid(_ board: Board, fromRow: Int, fromColumn: Int, toRow: Int, toColumn: Int) -> Bool {
+    public func isMoveValid(_ board: Board, fromRow: Int, fromColumn: Int, toRow: Int, toColumn: Int) throws -> Bool {
         // Verifier les nbRows et le nbColumns
         guard fromRow >= 0 && fromRow < board.nbRows && fromColumn >= 0 && fromColumn < board.nbColumns &&
               toRow >= 0 && toRow < board.nbRows && toColumn >= 0 && toColumn < board.nbColumns else {
-            return false
-        }
-
-        // Récupérer les cellules d'origine et de destination en fonction des coordonnées données
-        let startCell = board.grid[fromRow][fromColumn]
-        let nextCell = board.grid[toRow][toColumn]
-
-        // Ici on va vérifier si la cellule d'origine contient une pièce du joueur actuel
-        guard let piece = startCell.piece, piece.owner == getNextPlayer() else {
-            return false
+            throw GameError.invalidMove
         }
         
         
-        //Ici on va vérifier si l'animal peut manger l'animal adversaire
-        guard let startPiece = startCell.piece, let nextPiece = nextCell.piece else {
-            return false
+        // Ici on va verifier si la cell contient une piece
+        let startingCell = board.grid[fromRow][fromColumn]
+        guard let startingPiece = startingCell.piece else {
+            throw GameError.invalidMove
         }
-        let startAnimal = startPiece.animal
-        let nextAnimal = nextPiece.animal
-
-        if startAnimal == .rat && nextAnimal == .elephant {
-            // Le rat peut manger l'éléphant, donc le mouvement est valide
-        } else {
-            // Sinon, utilisez la logique de comparaison des forces
-            guard startAnimal.rawValue <= nextAnimal.rawValue else {
-                return false
+        
+        let destinationCell = board.grid[toRow][toColumn]
+        if let destinationPiece = destinationCell.piece {
+            
+            // Ici on va check si le player essaye de manger sa propre piece ou si l'animal attacant est plus faible que l'animal cible
+            if destinationPiece.owner == startingPiece.owner || startingPiece.animal.rawValue < destinationPiece.animal.rawValue {
+                throw GameError.invalidMove
             }
         }
         
         // On verifie qu'on ne peut pas faire un mouvement en diagonal et aussi que la piece à bougé
         guard (abs(toRow - fromRow) == 1 && toColumn == fromColumn) || (toRow == fromRow && abs(toColumn - fromColumn) == 1) && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 2 && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 0 else {
-            return false
+            throw GameError.invalidMove
         }
 
-        // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
-        guard startPiece.owner != nextPiece.owner else {
-            return false
-        }
-
-        // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
-        guard startCell.piece?.owner != nextCell.piece?.owner else {
-            return false
-        }
 
         return true
     }
@@ -187,10 +173,9 @@ public struct VerySimpleRules: Rules {
     ///  - board : Le plateau actuel
     ///  - move : Le mouvement à verifier
     /// - Returns : 'true' si le movement est valide ou 'false' sinon
-    public func isMoveValid(_ board: Board, move: Move) -> Bool {
+    public func isMoveValid(_ board: Board, move: Move) throws -> Bool {
         //on utilise la méthode en haut
-        return isMoveValid(board, fromRow: move.rowOrigin, fromColumn: move.columnOrigin, toRow: move.rowDestination, toColumn: move.columnDestination)
-
+        return try isMoveValid(board, fromRow: move.rowOrigin, fromColumn: move.columnOrigin, toRow: move.rowDestination, toColumn: move.columnDestination)
     }
     
     ///Methode pour verifier si le jeu a fini utiliser les parametized labels
@@ -201,12 +186,13 @@ public struct VerySimpleRules: Rules {
     ///  - lastMoveColumn: La colone du dernier mouvement
     /// - Returns : un tuble avec un boolean pour savoir si la partie est fini et le resultat de la partie
     public func isGameOver(_ board: Board, lastMoveRow: Int, lastMoveColumn: Int) -> (Bool, Result) {
-        //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
+        let currentPlayer = getNextPlayer()
+        let opponent = (currentPlayer == .player1) ? Owner.player2 : Owner.player1
+        
         let lastMoveCell = board.grid[lastMoveRow][lastMoveColumn]
+        
+        //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
         if lastMoveCell.cellType == .den {
-            let currentPlayer = getNextPlayer()
-            let opponent = (currentPlayer == .player1) ? Owner.player2 : Owner.player1
-            
             if (lastMoveCell.piece?.owner == opponent){
                 return (true, .winner(opponent, .denReached))
             }
@@ -224,7 +210,6 @@ public struct VerySimpleRules: Rules {
         }
 
         //Ici on va verifier si l'adversaire est coincé
-        let opponent = (getNextPlayer() == .player1) ? Owner.player2 : Owner.player1
         let availableMoves = getMoves(board, opponent)
 
         if availableMoves.isEmpty {
