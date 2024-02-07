@@ -1,14 +1,15 @@
 import Foundation
 
 /// Structure de l'observateur qui gère l'affichage des messages
-public struct GameMessenger: GameObserver {
+public struct GameMessenger {
     public init() {}
     
     /// Affiche le message de début de jeu
-    public func gameStarts() {
+    public func gameStarts(board : Board) {
         print("**************************************")
         print("          ==>> LE JEU COMMENCE ! <<==        ")
         print("**************************************")
+        print(board)
     }
     
     /// Affiche le message indiquant le tour du prochain joueur

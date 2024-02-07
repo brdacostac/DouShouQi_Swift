@@ -293,9 +293,13 @@ let gameMessenger = GameMessenger()
 // Créez une instance de Game
 var game = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
 
-// Ajoutez l'observateur à Game
-game.addObserver(gameMessenger)
-
+// Ajout des listener messanger
+game.addGameStartsListener(callBack: gameMessenger.gameStarts)
+game.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
+game.addGameOverListener(callBack: gameMessenger.gameOver)
+game.addMoveChosenListener(callBack: gameMessenger.moveChosen)
+game.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
+game.addBoardChangedListener(callBack: gameMessenger.boardChanged)
 // Démarrez le jeu
 do {
     try game.start()

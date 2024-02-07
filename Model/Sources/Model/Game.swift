@@ -8,7 +8,14 @@ public struct Game {
     public let player2 : Player
     
     //pointeur de fonction
-    private var observers : [GameObserver] = []
+    private var gameStartsCallBack : [((Board) -> Void)] = []
+    private var nextPlayerTurnCallBack : [((Player) -> Void)] = []
+    private var gameOverCallBack: [( ((Bool, Result)) -> Void)] = []
+    private var moveChosenCallBack : [((Move) -> Void)] = []
+    private var invalidMoveCallBack : [ (() -> Void)] = []
+    private var boardChangedCallBack : [ ((Board) -> Void)] = []
+
+
     
     public init(withRules rules: Rules, andPlayer1 player1: Player, andPlayer2 player2: Player) {
         self.rules = rules
@@ -17,53 +24,72 @@ public struct Game {
         self.player2 = player2
     }
     
-    /// Ajoute un observateur
-    public mutating func addObserver(_ observer: GameObserver) {
-        observers.append(observer)
+    public mutating func addGameStartsListener(callBack: @escaping (Board) -> Void) {
+        self.gameStartsCallBack.append(callBack)
+    }
+    
+    public mutating func addNextPlayerTurnListener(callBack: @escaping (Player) -> Void) {
+        self.nextPlayerTurnCallBack.append(callBack)
+    }
+    
+    public mutating func addGameOverListener(callBack: @escaping ((Bool, Result)) -> Void){
+        self.gameOverCallBack.append(callBack)
+    }
+    
+    public mutating func addMoveChosenListener(callBack: @escaping (Move) -> Void) {
+        self.moveChosenCallBack.append(callBack)
+    }
+    
+    public mutating func addInvalidMoveListener(callBack: @escaping () -> Void) {
+        self.invalidMoveCallBack.append(callBack)
+    }
+    
+    public mutating func addBoardChangedListener(callBack: @escaping (Board) -> Void) {
+        self.boardChangedCallBack.append(callBack)
     }
     
     /// Notifie tous les observateurs que le jeu démarre
-    public func notifyGameStarts() {
-        observers.forEach { $0.gameStarts() }
+    public func notifyGameStarts(_ board: Board) {
+        gameStartsCallBack.forEach { $0(board) }
     }
     
     /// Notifie tous les observateurs du prochain joueur à jouer
     ///
     /// - Parameter player: Le joueur suivant
     public func notifyNextPlayerTurn(player: Player) {
-        observers.forEach { $0.nextPlayerTurn(player: player) }
+        nextPlayerTurnCallBack.forEach { $0(player) }
     }
     
     /// Notifie tous les observateurs de la fin du jeu avec le résultat
     ///
     /// - Parameter result: Le résultat de la partie
     public func notifyGameOver(result: (Bool, Result)) {
-        observers.forEach { $0.gameOver(result: result) }
+        gameOverCallBack.forEach { $0(result) }
     }
     
     /// Notifie tous les observateurs du mouvement choisi par un joueur
     ///
     /// - Parameter move: Le mouvement choisi
     public func notifyMoveChosen(move: Move) {
-        observers.forEach { $0.moveChosen(move: move) }
+        moveChosenCallBack.forEach { $0(move) }
     }
     
     /// Notifie tous les observateurs d'un mouvement invalide
     public func notifyInvalidMove() {
-        observers.forEach { $0.invalidMove() }
+        invalidMoveCallBack.forEach { $0() }
     }
     
     /// Notifie tous les observateurs du changement de plateau de jeu
     ///
     /// - Parameter board: Le nouveau plateau de jeu
     public func notifyBoardChanged(board: Board) {
-        observers.forEach { $0.boardChanged(board: board) }
+        boardChangedCallBack.forEach { $0(board) }
     }
 
     
     /// Fonction pour lancer la boucle de jeu
     public mutating func start() throws {
-        notifyGameStarts()
+        notifyGameStarts(board)
         
         var nextPlayer: Player = player1
         var lastMoveRow = 0
