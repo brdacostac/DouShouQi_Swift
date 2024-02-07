@@ -116,7 +116,11 @@ public struct Game {
                             
                             if let piece = board.grid[originRow][originColumn].piece {
                                 _ = board.removePiece(atRow: originRow, andColumn: originColumn)
-                                _ = board.insertPiece(piece: piece, atRow: destinationRow, andColumn: destinationColumn)
+                                if let _ = board.grid[destinationRow][destinationColumn].piece {
+                                            // Si une pièce adverse est présente à la destination, la supprimer
+                                            _ = board.removePiece(atRow: destinationRow, andColumn: destinationColumn)
+                                        }
+                                        _ = board.insertPiece(piece: piece, atRow: destinationRow, andColumn: destinationColumn)
                                 
                                 rules.playedMove(move, fromBoard: previousBoard, toBoard: board)
                                 

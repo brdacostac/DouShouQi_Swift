@@ -17,8 +17,9 @@ public struct VerySimpleRules: Rules {
     /// - Returns : Un nouveau board du jeu
     public static func createBoard() -> Board {
         let jungleEmptyCell: Cell = Cell(ofType: .jungle)
-        let denEmptyCell: Cell = Cell(ofType: .den)
-        
+        let denCell1: Cell = Cell(ofType: .den, ownedBy: .player1)
+        let denCell2: Cell = Cell(ofType: .den, ownedBy: .player2)
+
         let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
         let rat2: Piece = Piece(withOwner: .player2, andAnimal: .rat)
         let cat1: Piece = Piece(withOwner: .player1, andAnimal: .cat)
@@ -43,11 +44,11 @@ public struct VerySimpleRules: Rules {
         
         
         let board: Board = Board(withGrid: [
-            [jungleEmptyCell, lion1StartCell, denEmptyCell, tiger1StartCell, jungleEmptyCell],
+            [jungleEmptyCell, lion1StartCell, denCell1, tiger1StartCell, jungleEmptyCell],
             [rat1StartCell, jungleEmptyCell, cat1StartCell, jungleEmptyCell, elephant1StartCell],
             [jungleEmptyCell, jungleEmptyCell, jungleEmptyCell, jungleEmptyCell, jungleEmptyCell],
             [elephant2StartCell, jungleEmptyCell, cat2StartCell, jungleEmptyCell, rat2StartCell],
-            [jungleEmptyCell, tiger2StartCell, denEmptyCell, lion2StartCell, jungleEmptyCell],
+            [jungleEmptyCell, tiger2StartCell, denCell2, lion2StartCell, jungleEmptyCell],
         ])!;
         
         return board
@@ -162,7 +163,14 @@ public struct VerySimpleRules: Rules {
         guard (abs(toRow - fromRow) == 1 && toColumn == fromColumn) || (toRow == fromRow && abs(toColumn - fromColumn) == 1) && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 2 && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 0 else {
             throw GameError.invalidMove
         }
-
+        
+        
+        // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
+        if (destinationCell.cellType == .den){
+            if (startingCell.initialOwner == destinationCell.initialOwner){
+                throw GameError.invalidMove
+            }
+        }
 
         return true
     }
@@ -189,11 +197,12 @@ public struct VerySimpleRules: Rules {
         let currentPlayer = getNextPlayer()
         let opponent = (currentPlayer == .player1) ? Owner.player2 : Owner.player1
         
+        
         let lastMoveCell = board.grid[lastMoveRow][lastMoveColumn]
         
         //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
         if lastMoveCell.cellType == .den {
-            if (lastMoveCell.piece?.owner != currentPlayer){
+            if (lastMoveCell.piece?.owner != opponent){
                 return (true, .winner(opponent, .denReached))
             }
         }

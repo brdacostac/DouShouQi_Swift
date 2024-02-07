@@ -284,8 +284,28 @@ print(boardPlayer.description)
 //print(result)
 
 
+
+func userInput(humanPlayer : HumanPlayer) -> Move {
+    print("Entrer le mouvement:")
+    print("Ligne de depart:")
+    let fromRow = Int(readLine() ?? "") ?? 0
+
+    print("Colonne de depart:")
+    let fromColumn = Int(readLine() ?? "") ?? 0
+
+    print("Pour aller à la ligne:")
+    let toRow = Int(readLine() ?? "") ?? 0
+
+    print("Pour aller à la colonne:")
+    let toColumn = Int(readLine() ?? "") ?? 0
+
+    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
+}
+
+
 // Créez les règles du jeu, les joueurs et les observateurs
 let rules = VerySimpleRules()
+//let player1 = HumanPlayer(withName: "Bruno", andId: .player1, andInputMethod: userInput)!
 let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
 let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
 let gameMessenger = GameMessenger()
