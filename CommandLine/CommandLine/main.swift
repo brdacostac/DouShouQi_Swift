@@ -1,6 +1,7 @@
 import Foundation
 import Model
 import ExtensionsTests
+import Persistance
 
 // Création des pièces des joueurs 1 et 2
 let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
@@ -283,49 +284,62 @@ print(boardPlayer.description)
 //let result = rules.isGameOver(leBoard, lastMoveRow: lastRow, lastMoveColumn: lastColumn)
 //print(result)
 
+//
+//
+//func userInput(humanPlayer : HumanPlayer) -> Move {
+//    print("Entrer le mouvement:")
+//    print("Ligne de depart:")
+//    let fromRow = Int(readLine() ?? "") ?? 0
+//
+//    print("Colonne de depart:")
+//    let fromColumn = Int(readLine() ?? "") ?? 0
+//
+//    print("Pour aller à la ligne:")
+//    let toRow = Int(readLine() ?? "") ?? 0
+//
+//    print("Pour aller à la colonne:")
+//    let toColumn = Int(readLine() ?? "") ?? 0
+//
+//    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
+//}
+//
+//
+//// Créez les règles du jeu, les joueurs et les observateurs
+//let rules = VerySimpleRules()
+////let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
+//let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
+//let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+//let gameMessenger = GameMessenger()
+//
+//// Créez une instance de Game
+//var game = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+//
+//// Ajout des listener messanger
+//game.addGameStartsListener(callBack: gameMessenger.gameStarts)
+//game.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
+//game.addGameOverListener(callBack: gameMessenger.gameOver)
+//game.addMoveChosenListener(callBack: gameMessenger.moveChosen)
+//game.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
+//game.addBoardChangedListener(callBack: gameMessenger.boardChanged)
+//// Démarrez le jeu
+//do {
+//    try game.start()
+//} catch {
+//    print("An error occurred while starting the game: \(error)")
+//}
 
+var jsonEnconder = JSONEncoder()
+var jsonDeconder = JSONDecoder()
 
-func userInput(humanPlayer : HumanPlayer) -> Move {
-    print("Entrer le mouvement:")
-    print("Ligne de depart:")
-    let fromRow = Int(readLine() ?? "") ?? 0
+var animalTest : Animal = .elephant
 
-    print("Colonne de depart:")
-    let fromColumn = Int(readLine() ?? "") ?? 0
+let resultEncode = try jsonEnconder.encode(animalTest.rawValue)
+print(animalTest.rawValue)
+print(String(data: resultEncode, encoding: .utf8)!)
 
-    print("Pour aller à la ligne:")
-    let toRow = Int(readLine() ?? "") ?? 0
+let resultDecode = try jsonDeconder.decode(Animal.self, from: resultEncode)
+print(resultDecode)
 
-    print("Pour aller à la colonne:")
-    let toColumn = Int(readLine() ?? "") ?? 0
-
-    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
-}
-
-
-// Créez les règles du jeu, les joueurs et les observateurs
-let rules = VerySimpleRules()
-//let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
-let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
-let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
-let gameMessenger = GameMessenger()
-
-// Créez une instance de Game
-var game = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
-
-// Ajout des listener messanger
-game.addGameStartsListener(callBack: gameMessenger.gameStarts)
-game.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
-game.addGameOverListener(callBack: gameMessenger.gameOver)
-game.addMoveChosenListener(callBack: gameMessenger.moveChosen)
-game.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
-game.addBoardChangedListener(callBack: gameMessenger.boardChanged)
-// Démarrez le jeu
-do {
-    try game.start()
-} catch {
-    print("An error occurred while starting the game: \(error)")
-}
 
 
 
