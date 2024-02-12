@@ -81,7 +81,8 @@ public struct Board : Hashable {
         }
         
         //On insere la piece dans les cordonnées passés en parametres
-        grid[atRow][andColumn].piece = piece
+        let currentCell = grid[atRow][andColumn]
+        grid[atRow][andColumn] = Cell(ofType: currentCell.cellType,ownedBy: currentCell.initialOwner, withPiece: piece)
         return .ok
     }
     

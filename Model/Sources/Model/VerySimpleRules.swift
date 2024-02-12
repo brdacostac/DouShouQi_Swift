@@ -155,22 +155,17 @@ public struct VerySimpleRules: Rules {
             
             // Ici on va check si le player essaye de manger sa propre piece ou si l'animal attacant est plus faible que l'animal cible
             if destinationPiece.owner == startingPiece.owner || startingPiece.animal.rawValue < destinationPiece.animal.rawValue {
-                throw GameError.invalidMove
+                throw GameError.animalStronger
             }
         }
         
         // On verifie qu'on ne peut pas faire un mouvement en diagonal et aussi que la piece à bougé
         guard (abs(toRow - fromRow) == 1 && toColumn == fromColumn) || (toRow == fromRow && abs(toColumn - fromColumn) == 1) && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 2 && abs(toRow - fromRow) + abs(toColumn - fromColumn) != 0 else {
-            throw GameError.invalidMove
+            throw GameError.diagonalMove
         }
         
         
-        // Ici on va vérifier si la cellule de destination contient une pièce du joueur actuel
-        if (destinationCell.cellType == .den){
-            if (startingCell.initialOwner == destinationCell.initialOwner){
-                throw GameError.invalidMove
-            }
-        }
+
 
         return true
     }
@@ -201,8 +196,8 @@ public struct VerySimpleRules: Rules {
         let lastMoveCell = board.grid[lastMoveRow][lastMoveColumn]
         
         //Ici on verifie si un joueur a reussi à arriver dans la tanniere de son adversaire
-        if lastMoveCell.cellType == .den {
-            if (lastMoveCell.piece?.owner != opponent){
+        if (lastMoveCell.cellType == .den && lastMoveCell.initialOwner != opponent) {
+            if (lastMoveCell.piece?.owner == opponent){
                 return (true, .winner(opponent, .denReached))
             }
         }

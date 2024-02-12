@@ -305,7 +305,7 @@ func userInput(humanPlayer : HumanPlayer) -> Move {
 
 // Créez les règles du jeu, les joueurs et les observateurs
 let rules = VerySimpleRules()
-//let player1 = HumanPlayer(withName: "Bruno", andId: .player1, andInputMethod: userInput)!
+//let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
 let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
 let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
 let gameMessenger = GameMessenger()
