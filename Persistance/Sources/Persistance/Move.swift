@@ -1,7 +1,7 @@
 import Foundation
 import Model
 
-///Extension pour la persistance de la strcut move du Model
+///Extension pour la persistance de la struct move du Model
 extension Model.Move: Codable {
     enum CodingKeys: String, CodingKey {
         case owner

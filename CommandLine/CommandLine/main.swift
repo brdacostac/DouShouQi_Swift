@@ -328,17 +328,112 @@ print(boardPlayer.description)
 //    print("An error occurred while starting the game: \(error)")
 //}
 
-var jsonEnconder = JSONEncoder()
-var jsonDeconder = JSONDecoder()
+
+//PERSISTANCES TESTS
+
+//Animal
+var jsonEncoder = JSONEncoder()
+var jsonDecoder = JSONDecoder()
 
 var animalTest : Animal = .elephant
+let animalTestEncode = try jsonEncoder.encode(animalTest.rawValue)
+print(animalTest.rawValue, "Test ENCODE")
+print(String(data: animalTestEncode, encoding: .utf8)!)
 
-let resultEncode = try jsonEnconder.encode(animalTest.rawValue)
-print(animalTest.rawValue)
-print(String(data: resultEncode, encoding: .utf8)!)
+let animalTestDecode = try jsonDecoder.decode(Animal.self, from: animalTestEncode)
+print(animalTestDecode, "Test DECODE")
 
-let resultDecode = try jsonDeconder.decode(Animal.self, from: resultEncode)
-print(resultDecode)
+//Board
+let boardTest : Board = VerySimpleRules.createBoard()
+let boardTestEncode = try jsonEncoder.encode(boardTest)
+if let boardTestEncodeString = String(data: boardTestEncode, encoding: .utf8){
+    print(boardTestEncodeString, "Test ENCODE")
+}
+let boardTestDecode = try jsonDecoder.decode(Board.self, from: boardTestEncode)
+print(boardTestDecode, "Test DECODE")
+
+//Owner
+let owner = Owner.player1
+let ownerEncode = try jsonEncoder.encode(owner)
+if let ownerEncodeString = String(data: ownerEncode, encoding: .utf8){
+    print(ownerEncodeString, "Test ENCODE")
+}
+let ownerDecode = try jsonDecoder.decode(Owner.self, from: ownerEncode)
+print(ownerDecode.description, "Test DECODE")
+
+//CellType
+let jungle = CellType.jungle
+let jungleEncode = try jsonEncoder.encode(jungle)
+if let jungleEncodeString = String(data: jungleEncode, encoding: .utf8){
+    print(jungleEncodeString, "Test ENCODE")
+}
+let jungleDecode = try jsonDecoder.decode(CellType.self, from: jungleEncode)
+print(jungleDecode, "Test DECODE")
+
+//Cell
+let wolfStartCellTest : Cell = Cell(ofType: .jungle,ownedBy: rat1.owner, withPiece: rat1)
+let wolfStartCellTestEncode = try jsonEncoder.encode(wolfStartCellTest)
+if let wolfStartCellTestEncodeString = String(data: wolfStartCellTestEncode, encoding: .utf8){
+    print(wolfStartCellTestEncodeString, "Test ENCODE")
+}
+let wolfStartCellTestDecode = try jsonDecoder.decode(Cell.self, from: wolfStartCellTestEncode)
+print(wolfStartCellTestDecode, "Test DECODE")
+
+//Piece
+let wolfPieceTest : Piece = Piece(withOwner: .player1, andAnimal: .wolf)
+let wolfPieceTestEncode = try jsonEncoder.encode(wolfPieceTest)
+if let wolfPieceTestEncodeString = String(data: wolfPieceTestEncode, encoding: .utf8){
+    print(wolfPieceTestEncodeString, "Test ENCODE")
+}
+let wolfPieceTestDecode = try jsonDecoder.decode(Piece.self, from: wolfPieceTestEncode)
+print(wolfPieceTestDecode , "Test DECODE")
+
+//Move
+let moveTest : Move = Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 1, columnDestination: 0)
+let moveTestEncode = try jsonEncoder.encode(moveTest)
+if let moveTestEncodeString = String(data: moveTestEncode, encoding: .utf8){
+    print(moveTestEncodeString , "Test ENCODE")
+}
+let moveTestDecode = try jsonDecoder.decode(Move.self, from: moveTestEncode)
+print(moveTestDecode, "Test DECODE")
+
+
+//Rules et VerifySimpleRules
+
+let verySimpleRulesTest: VerySimpleRules = VerySimpleRules()
+let rulesCodable = RulesCodable(occurrences: verySimpleRulesTest.occurrences, historic: verySimpleRulesTest.historic, rulesType: "VerySimpleRules")
+let rulesCodableEncode = try jsonEncoder.encode(rulesCodable)
+if let rulesCodableEncodeString = String(data: rulesCodableEncode, encoding: .utf8){
+    print(rulesCodableEncodeString, "Test ENCODE")
+}
+let rulesCodableDecode = try jsonDecoder.decode(RulesCodable.self, from: rulesCodableEncode)
+let rulesDecode = verySimpleRulesTest.decodeRules(rulesCodable: rulesCodableDecode)
+print(rulesDecode, "Test DECODE")
+
+
+//RandomPlayer
+let randomPlayerTest: RandomPlayer = RandomPlayer(withName: "BotRandom", andId: .player1)!
+let playerCodableRandom = PlayerCodable(id: randomPlayerTest.id, name: randomPlayerTest.name, playerType: "RandomPlayer")
+let playerCodableRandomEncode = try jsonEncoder.encode(playerCodableRandom)
+if let playerCodableRandomEncodeString = String(data: playerCodableRandomEncode, encoding: .utf8){
+    print(playerCodableRandomEncodeString, "Test ENCODE")
+}
+let playerCodableRandomDecode = try jsonDecoder.decode(PlayerCodable.self, from: playerCodableRandomEncode)
+let playerRandomDecode = randomPlayerTest.decodePlayer(playerCodable: playerCodableRandomDecode)
+print(playerRandomDecode, "Test DECODE")
+
+
+// HumanPlayer
+let humanPlayerTest: HumanPlayer = HumanPlayer(withName: "Human", andId: .player1, andInputMethod: { _ in return Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 1, columnDestination: 0) })!
+let playerCodableHuman = PlayerCodable(id: humanPlayerTest.id, name: humanPlayerTest.name, playerType: "HumanPlayer")
+let playerCodableHumanEncode = try jsonEncoder.encode(playerCodableHuman)
+if let playerCodableHumanEncodeString = String(data: playerCodableHumanEncode, encoding: .utf8){
+    print(playerCodableHumanEncodeString, "Test ENCODE")
+}
+let playerCodableHumanDecode = try jsonDecoder.decode(PlayerCodable.self, from: playerCodableHumanEncode)
+let playerHumanDecode = humanPlayerTest.decodePlayer(playerCodable: playerCodableHumanDecode)
+print(playerHumanDecode, "Test DECODE")
+
 
 
 
