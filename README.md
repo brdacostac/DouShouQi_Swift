@@ -1,14 +1,13 @@
 
 # **Swift_TP---[DouShouQi]**
 
-## Bonjour et bienvenue sur mon dépôt. ! 👋
-
 
 Sommaire
 
 
   
  1. [Introduction](#introduction)
+ 1. [Diagramme](#structure)
  2. [Lancer le jeu](#lancer)
  3. [Lancer les tests](#tests)
  4. [TP1](#tp1)
@@ -45,7 +44,10 @@ Bienvenue dans le passionnant monde de Dou Shou Qi, une application console en c
 
 *******
 
-# Structure de l'application
+  
+<div  id='structure'/>
+
+##**Structure de l'application**
 
 Voici un diagramme de classes volontairement simplifié présentant grossièrement les différents acteurs de l'application que vous devez réaliser :
 
@@ -94,13 +96,12 @@ class Game {
 }
 ```
  
-
+*******
 
   
 <div  id='objectif'/>
 
 ## **Objectif du jeu** :computer:
-
   
 
 
