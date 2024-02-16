@@ -442,15 +442,63 @@ var jsonDecoder = JSONDecoder()
 
 
 
+//La partie est bien enregistrer, par contre je n'arrive pas à faire rejouer à cause de ma persistance Player, plus precisement à cause de la ligne 29 de l'extention Player dans Persistance.
+
+func userInput(humanPlayer : HumanPlayer) -> Move {
+    print("Entrer le mouvement:")
+    print("Ligne de depart:")
+    let fromRow = Int(readLine() ?? "") ?? 0
+
+    print("Colonne de depart:")
+    let fromColumn = Int(readLine() ?? "") ?? 0
+
+    print("Pour aller à la ligne:")
+    let toRow = Int(readLine() ?? "") ?? 0
+
+    print("Pour aller à la colonne:")
+    let toColumn = Int(readLine() ?? "") ?? 0
+
+    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
+}
 
 
+// Fonction pour demander à l'utilisateur s'il veut charger la partie enregistrée
+func askToLoadSavedGame() -> Bool {
+    print("Voulez-vous charger la dernière partie enregistrée ? (O/N)")
+    if let response = readLine()?.lowercased() {
+        return response == "o"
+    } else {
+        return false
+    }
+}
 
-// Game jouer une partie enregistrée
+// Game jouer une partie
 let rules = VerySimpleRules()
 let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
-let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+//let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
 
-var game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+var game1: Game
+
+// Demander à l'utilisateur s'il veut charger la partie enregistrée
+if askToLoadSavedGame() {
+    do {
+        if let loadedGame = try await MyFileManager.loadGame(withName: "saved_game") {
+            game1 = loadedGame
+            print("La dernière partie enregistrée a été chargée.")
+        } else {
+            game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+            print("Il n'y a pas de partie enregistrée. Une nouvelle partie commence.")
+        }
+    } catch {
+        print("Erreur lors du chargement de la dernière partie enregistrée: \(error)")
+        game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+    }
+} else {
+    game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+    print("Une nouvelle partie commence.")
+}
+
 let gameMessenger = GameMessenger()
 
 // Définissez une fonction de sauvegarde de jeu
@@ -478,28 +526,3 @@ do {
 } catch {
     print("An error occurred while starting the game: \(error)")
 }
-
- //Chargement du jeu
-do {
-    if let loadedGame = try await MyFileManager.loadGame(withName: "saved_game") {
-        // Utilisation du jeu chargé
-        print("Game a bien reussi à charger: \(loadedGame.board)")
-    } else {
-        print("Fail pour charger le jeu")
-    }
-} catch {
-    print("Fail pour charger le jeu: \(error)")
-}
-
-
-
-
-
-
-
-
-
-
-
-
-

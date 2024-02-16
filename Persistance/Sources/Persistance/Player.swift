@@ -23,7 +23,7 @@ public struct PlayerData: Codable{
     let name: String
     let playerType: String
     
-    
+
     
     public func getPlayer() -> Player {
         let move = Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 1, columnDestination: 0)
