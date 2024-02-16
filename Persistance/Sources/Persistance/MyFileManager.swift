@@ -37,7 +37,7 @@ public struct MyFileManager {
                 guard let data = try? Data(contentsOf: saveUrl) else {
                     return nil
                 }
-                let game = try JSONDecoder().decode(Game.self, from: data)
+                var game = try JSONDecoder().decode(Game.self, from: data)
                 return game
             } catch {
                 throw error

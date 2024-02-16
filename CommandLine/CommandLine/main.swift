@@ -59,6 +59,8 @@ var board: Board = Board(withGrid: [
     [jungleCell, cat2StartCell, jungleCell, trapCell, jungleCell, dog2StartCell, jungleCell],
     [tiger2StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion2StartCell]
 ])!
+
+//Decomentez pour avoir les tests en CLI sur le Model
 /*
 // Affichage du tableau dans le console
 var test = board.description
@@ -304,15 +306,19 @@ print(boardPlayer.description)
 //}
 //
 //
-// Créez les règles du jeu, les joueurs et les observateurs
-//let rules = VerySimpleRules()
+
+//Decomentez pour avoir des tests en CLI sur les Players
+
+//// Créez les règles du jeu, les joueurs et les observateurs
+///
+//let rules1 = VerySimpleRules()
 ////let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
 //let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
 //let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
 //let gameMessenger = GameMessenger()
 //
 //// Créez une instance de Game
-//var game = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+//var game = Game(withRules: rules1, andPlayer1: player1, andPlayer2: player2)
 //
 //// Ajout des listener messanger
 //game.addGameStartsListener(callBack: gameMessenger.gameStarts)
@@ -438,15 +444,26 @@ var jsonDecoder = JSONDecoder()
 
 
 
-// Game jouer une partie enrengistré
 
+// Game jouer une partie enregistrée
 let rules = VerySimpleRules()
 let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
 let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
-let gameMessenger = GameMessenger()
 
 var game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+let gameMessenger = GameMessenger()
 
+// Définissez une fonction de sauvegarde de jeu
+func saveGameCallback(game: Game) async {
+    do {
+        try await MyFileManager.saveGame(game, withName: "saved_game")
+    } catch {
+        print("Error saving game: \(error)")
+    }
+}
+
+// Ajoutez la fonction de sauvegarde en tant qu'observateur de sauvegarde de jeu
+game1.gameSavedListener(callBack: saveGameCallback)
 // Ajout des listener messanger
 game1.addGameStartsListener(callBack: gameMessenger.gameStarts)
 game1.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
@@ -455,25 +472,25 @@ game1.addMoveChosenListener(callBack: gameMessenger.moveChosen)
 game1.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
 game1.addBoardChangedListener(callBack: gameMessenger.boardChanged)
 
-
-// Sauvegarde du jeu
+// Lancez le jeu
 do {
-    try await MyFileManager.saveGame(game1, withName: "saved_game")
+    try game1.start()
 } catch {
-    print("Game pas save: \(error)")
+    print("An error occurred while starting the game: \(error)")
 }
 
-// Chargement du jeu
+ //Chargement du jeu
 do {
     if let loadedGame = try await MyFileManager.loadGame(withName: "saved_game") {
         // Utilisation du jeu chargé
-        print("Game a bien reussi à charger: \(loadedGame)")
+        print("Game a bien reussi à charger: \(loadedGame.board)")
     } else {
         print("Fail pour charger le jeu")
     }
 } catch {
     print("Fail pour charger le jeu: \(error)")
 }
+
 
 
 
