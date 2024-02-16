@@ -14,6 +14,7 @@ public struct Game {
     private var moveChosenCallBack : [((Move) -> Void)] = []
     private var invalidMoveCallBack : [ (() -> Void)] = []
     private var boardChangedCallBack : [ ((Board) -> Void)] = []
+    private var gameSavedCallBack : [ ((Game) async -> ())] = []
 
 
     
@@ -46,6 +47,10 @@ public struct Game {
     
     public mutating func addBoardChangedListener(callBack: @escaping (Board) -> Void) {
         self.boardChangedCallBack.append(callBack)
+    }
+    
+    public mutating func gameSavedListener(callBack: @escaping (Game) async -> ()) {
+        self.gameSavedCallBack.append(callBack)
     }
     
     /// Notifie tous les observateurs que le jeu démarre
@@ -85,6 +90,19 @@ public struct Game {
     public func notifyBoardChanged(board: Board) {
         boardChangedCallBack.forEach { $0(board) }
     }
+    
+    /// Notifie tous les observateurs d'une demande de sauvegarde
+    ///
+    /// - Parameter board: Le nouveau plateau de jeu
+    @available(macOS 10.15, *)
+    public func notifyGameSaved(game: Game) {
+            gameSavedCallBack.forEach { handler in
+                Task {
+                    await handler(game)
+                }
+            }
+        }
+
 
     
     /// Fonction pour lancer la boucle de jeu
@@ -141,6 +159,12 @@ public struct Game {
             
             // Changer de joueur
             nextPlayer = (nextPlayer === player1) ? player2 : player1
+            if #available(macOS 10.15, *) {
+                notifyGameSaved(game: self)
+            } else {
+                // Fallback on earlier versions
+            }
+            
         }
         
         // La partie est terminée, notifie les observateurs

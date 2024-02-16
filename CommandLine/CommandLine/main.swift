@@ -1,6 +1,7 @@
 import Foundation
 import Model
 import ExtensionsTests
+import Persistance
 
 // Création des pièces des joueurs 1 et 2
 let rat1: Piece = Piece(withOwner: .player1, andAnimal: .rat)
@@ -58,6 +59,8 @@ var board: Board = Board(withGrid: [
     [jungleCell, cat2StartCell, jungleCell, trapCell, jungleCell, dog2StartCell, jungleCell],
     [tiger2StartCell, jungleCell, trapCell, denCell, trapCell, jungleCell, lion2StartCell]
 ])!
+
+//Decomentez pour avoir les tests en CLI sur le Model
 /*
 // Affichage du tableau dans le console
 var test = board.description
@@ -283,7 +286,163 @@ print(boardPlayer.description)
 //let result = rules.isGameOver(leBoard, lastMoveRow: lastRow, lastMoveColumn: lastColumn)
 //print(result)
 
+//
+//
+//func userInput(humanPlayer : HumanPlayer) -> Move {
+//    print("Entrer le mouvement:")
+//    print("Ligne de depart:")
+//    let fromRow = Int(readLine() ?? "") ?? 0
+//
+//    print("Colonne de depart:")
+//    let fromColumn = Int(readLine() ?? "") ?? 0
+//
+//    print("Pour aller à la ligne:")
+//    let toRow = Int(readLine() ?? "") ?? 0
+//
+//    print("Pour aller à la colonne:")
+//    let toColumn = Int(readLine() ?? "") ?? 0
+//
+//    return Move(owner: humanPlayer.id, rowOrigin: fromRow, columnOrigin: fromColumn, rowDestination: toRow, columnDestination: toColumn)
+//}
+//
+//
 
+//Decomentez pour avoir des tests en CLI sur les Players
+
+//// Créez les règles du jeu, les joueurs et les observateurs
+///
+//let rules1 = VerySimpleRules()
+////let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
+//let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
+//let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+//let gameMessenger = GameMessenger()
+//
+//// Créez une instance de Game
+//var game = Game(withRules: rules1, andPlayer1: player1, andPlayer2: player2)
+//
+//// Ajout des listener messanger
+//game.addGameStartsListener(callBack: gameMessenger.gameStarts)
+//game.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
+//game.addGameOverListener(callBack: gameMessenger.gameOver)
+//game.addMoveChosenListener(callBack: gameMessenger.moveChosen)
+//game.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
+//game.addBoardChangedListener(callBack: gameMessenger.boardChanged)
+//// Démarrez le jeu
+//do {
+//    try game.start()
+//} catch {
+//    print("An error occurred while starting the game: \(error)")
+//}
+
+
+//PERSISTANCES TESTS
+
+//Animal
+var jsonEncoder = JSONEncoder()
+var jsonDecoder = JSONDecoder()
+
+//var animalTest : Animal = .elephant
+//let animalTestEncode = try jsonEncoder.encode(animalTest.rawValue)
+//print(animalTest.rawValue, "Test ENCODE")
+//print(String(data: animalTestEncode, encoding: .utf8)!)
+//
+//let animalTestDecode = try jsonDecoder.decode(Animal.self, from: animalTestEncode)
+//print(animalTestDecode, "Test DECODE")
+//
+////Board
+//let boardTest : Board = VerySimpleRules.createBoard()
+//let boardTestEncode = try jsonEncoder.encode(boardTest)
+//if let boardTestEncodeString = String(data: boardTestEncode, encoding: .utf8){
+//    print(boardTestEncodeString, "Test ENCODE")
+//}
+//let boardTestDecode = try jsonDecoder.decode(Board.self, from: boardTestEncode)
+//print(boardTestDecode, "Test DECODE")
+//
+////Owner
+//let owner = Owner.player1
+//let ownerEncode = try jsonEncoder.encode(owner)
+//if let ownerEncodeString = String(data: ownerEncode, encoding: .utf8){
+//    print(ownerEncodeString, "Test ENCODE")
+//}
+//let ownerDecode = try jsonDecoder.decode(Owner.self, from: ownerEncode)
+//print(ownerDecode.description, "Test DECODE")
+//
+////CellType
+//let jungle = CellType.jungle
+//let jungleEncode = try jsonEncoder.encode(jungle)
+//if let jungleEncodeString = String(data: jungleEncode, encoding: .utf8){
+//    print(jungleEncodeString, "Test ENCODE")
+//}
+//let jungleDecode = try jsonDecoder.decode(CellType.self, from: jungleEncode)
+//print(jungleDecode, "Test DECODE")
+//
+////Cell
+//let wolfStartCellTest : Cell = Cell(ofType: .jungle,ownedBy: rat1.owner, withPiece: rat1)
+//let wolfStartCellTestEncode = try jsonEncoder.encode(wolfStartCellTest)
+//if let wolfStartCellTestEncodeString = String(data: wolfStartCellTestEncode, encoding: .utf8){
+//    print(wolfStartCellTestEncodeString, "Test ENCODE")
+//}
+//let wolfStartCellTestDecode = try jsonDecoder.decode(Cell.self, from: wolfStartCellTestEncode)
+//print(wolfStartCellTestDecode, "Test DECODE")
+//
+////Piece
+//let wolfPieceTest : Piece = Piece(withOwner: .player1, andAnimal: .wolf)
+//let wolfPieceTestEncode = try jsonEncoder.encode(wolfPieceTest)
+//if let wolfPieceTestEncodeString = String(data: wolfPieceTestEncode, encoding: .utf8){
+//    print(wolfPieceTestEncodeString, "Test ENCODE")
+//}
+//let wolfPieceTestDecode = try jsonDecoder.decode(Piece.self, from: wolfPieceTestEncode)
+//print(wolfPieceTestDecode , "Test DECODE")
+//
+////Move
+//let moveTest : Move = Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 1, columnDestination: 0)
+//let moveTestEncode = try jsonEncoder.encode(moveTest)
+//if let moveTestEncodeString = String(data: moveTestEncode, encoding: .utf8){
+//    print(moveTestEncodeString , "Test ENCODE")
+//}
+//let moveTestDecode = try jsonDecoder.decode(Move.self, from: moveTestEncode)
+//print(moveTestDecode, "Test DECODE")
+//
+//
+////Rules et VerifySimpleRules
+//
+//let verySimpleRulesTest: VerySimpleRules = VerySimpleRules()
+//let rulesData = RulesData(occurrences: verySimpleRulesTest.occurrences, historic: verySimpleRulesTest.historic, rulesType: "VerySimpleRules")
+//let rulesDataEncode = try jsonEncoder.encode(rulesData)
+//if let rulesDataEncodeString = String(data: rulesDataEncode, encoding: .utf8){
+//    print(rulesDataEncodeString, "Test ENCODE")
+//}
+//let rulesDataDecode = try jsonDecoder.decode(RulesData.self, from: rulesDataEncode)
+//let rulesDecode = verySimpleRulesTest.decodeRules(rulesData: rulesDataDecode)
+//print(rulesDecode, "Test DECODE")
+//
+//
+////RandomPlayer
+//let randomPlayerTest: RandomPlayer = RandomPlayer(withName: "BotRandom", andId: .player1)!
+//let playerDataRandom = PlayerData(id: randomPlayerTest.id, name: randomPlayerTest.name, playerType: "RandomPlayer")
+//let playerDataRandomEncode = try jsonEncoder.encode(playerDataRandom)
+//if let playerDataRandomEncodeString = String(data: playerDataRandomEncode, encoding: .utf8){
+//    print(playerDataRandomEncodeString, "Test ENCODE")
+//}
+//let playerDataRandomDecode = try jsonDecoder.decode(PlayerData.self, from: playerDataRandomEncode)
+//let playerRandomDecode = randomPlayerTest.decodePlayer(playerData: playerDataRandomDecode)
+//print(playerRandomDecode, "Test DECODE")
+//
+//
+//// HumanPlayer
+//let humanPlayerTest: HumanPlayer = HumanPlayer(withName: "Human", andId: .player1, andInputMethod: { _ in return Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 1, columnDestination: 0) })!
+//let playerDataHuman = PlayerData(id: humanPlayerTest.id, name: humanPlayerTest.name, playerType: "HumanPlayer")
+//let playerDataHumanEncode = try jsonEncoder.encode(playerDataHuman)
+//if let playerDataHumanEncodeString = String(data: playerDataHumanEncode, encoding: .utf8){
+//    print(playerDataHumanEncodeString, "Test ENCODE")
+//}
+//let playerDataHumanDecode = try jsonDecoder.decode(PlayerData.self, from: playerDataHumanEncode)
+//let playerHumanDecode = humanPlayerTest.decodePlayer(playerData: playerDataHumanDecode)
+//print(playerHumanDecode, "Test DECODE")
+
+
+
+//La partie est bien enregistrer, par contre je n'arrive pas à faire rejouer à cause de ma persistance Player, plus precisement à cause de la ligne 29 de l'extention Player dans Persistance.
 
 func userInput(humanPlayer : HumanPlayer) -> Move {
     print("Entrer le mouvement:")
@@ -303,38 +462,67 @@ func userInput(humanPlayer : HumanPlayer) -> Move {
 }
 
 
-// Créez les règles du jeu, les joueurs et les observateurs
+// Fonction pour demander à l'utilisateur s'il veut charger la partie enregistrée
+func askToLoadSavedGame() -> Bool {
+    print("Voulez-vous charger la dernière partie enregistrée ? (O/N)")
+    if let response = readLine()?.lowercased() {
+        return response == "o"
+    } else {
+        return false
+    }
+}
+
+// Game jouer une partie
 let rules = VerySimpleRules()
-//let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
 let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
-let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+//let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
+
+var game1: Game
+
+// Demander à l'utilisateur s'il veut charger la partie enregistrée
+if askToLoadSavedGame() {
+    do {
+        if let loadedGame = try await MyFileManager.loadGame(withName: "saved_game") {
+            game1 = loadedGame
+            print("La dernière partie enregistrée a été chargée.")
+        } else {
+            game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+            print("Il n'y a pas de partie enregistrée. Une nouvelle partie commence.")
+        }
+    } catch {
+        print("Erreur lors du chargement de la dernière partie enregistrée: \(error)")
+        game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+    }
+} else {
+    game1 = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+    print("Une nouvelle partie commence.")
+}
+
 let gameMessenger = GameMessenger()
 
-// Créez une instance de Game
-var game = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
+// Définissez une fonction de sauvegarde de jeu
+func saveGameCallback(game: Game) async {
+    do {
+        try await MyFileManager.saveGame(game, withName: "saved_game")
+    } catch {
+        print("Error saving game: \(error)")
+    }
+}
 
+// Ajoutez la fonction de sauvegarde en tant qu'observateur de sauvegarde de jeu
+game1.gameSavedListener(callBack: saveGameCallback)
 // Ajout des listener messanger
-game.addGameStartsListener(callBack: gameMessenger.gameStarts)
-game.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
-game.addGameOverListener(callBack: gameMessenger.gameOver)
-game.addMoveChosenListener(callBack: gameMessenger.moveChosen)
-game.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
-game.addBoardChangedListener(callBack: gameMessenger.boardChanged)
-// Démarrez le jeu
+game1.addGameStartsListener(callBack: gameMessenger.gameStarts)
+game1.addNextPlayerTurnListener(callBack: gameMessenger.nextPlayerTurn)
+game1.addGameOverListener(callBack: gameMessenger.gameOver)
+game1.addMoveChosenListener(callBack: gameMessenger.moveChosen)
+game1.addInvalidMoveListener(callBack: gameMessenger.invalidMove)
+game1.addBoardChangedListener(callBack: gameMessenger.boardChanged)
+
+// Lancez le jeu
 do {
-    try game.start()
+    try game1.start()
 } catch {
     print("An error occurred while starting the game: \(error)")
 }
-
-
-
-
-
-
-
-
-
-
-
-
