@@ -40,12 +40,61 @@ Bienvenue dans le passionnant monde de Dou Shou Qi, une application console en c
 
 ## **À propos de Dou Shou Qi** :computer:
 
-  
-
 
 **Dou Shou Qi** est un jeu de plateau stratégique dont les origines remontent au Vème siècle. Également connu sous le nom de "Jungle Chess", ce jeu met en scène une bataille animale où chaque pièce représente un animal de la jungle, chacun ayant des capacités et des règles de déplacement spécifiques.
 
 *******
+
+# Structure de l'application
+
+Voici un diagramme de classes volontairement simplifié présentant grossièrement les différents acteurs de l'application que vous devez réaliser :
+
+```mermaid
+classDiagram
+direction TB
+
+Game --> "1" Rules : rules
+Game --> "1" Board : board
+Game --> "2" Player: players
+
+Rules <|.. ClassicRules
+Rules <|.. VerySimpleRules
+
+Rules ..> Board
+Board --> "*,*" Cell : grid
+
+Player <|-- RandomPlayer
+Player <|-- HumanPlayer
+
+class Board {
+    +insert(piece:, atRow:, andColumn:)
+    +removePiece(atRow:, andColumn:)
+}
+
+class Cell {
+    +cellType : CellType
+    +initialOwner: Owner
+    +piece : Piece?
+}
+
+class Rules {
+    +createBoard() : Board$
+    +getNextPlayer() : Owner
+    +isMoveValid(Board, Move) : Bool
+    +isGameOver(Board, Int, Int) : Bool
+}
+
+class Player {
+    +chooseMove(in: Board, with: Rules) Move?
+}
+
+class Game {
+    +init(withRules:, andPlayer1:, andPlayer2: Player)
+    +start()
+}
+```
+ 
+
 
   
 <div  id='objectif'/>
