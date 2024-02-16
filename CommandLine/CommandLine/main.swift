@@ -304,7 +304,7 @@ print(boardPlayer.description)
 //}
 //
 //
-//// Créez les règles du jeu, les joueurs et les observateurs
+// Créez les règles du jeu, les joueurs et les observateurs
 //let rules = VerySimpleRules()
 ////let player2 = HumanPlayer(withName: "Bruno", andId: .player2, andInputMethod: userInput)!
 //let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
@@ -401,38 +401,48 @@ print(moveTestDecode, "Test DECODE")
 //Rules et VerifySimpleRules
 
 let verySimpleRulesTest: VerySimpleRules = VerySimpleRules()
-let rulesCodable = RulesCodable(occurrences: verySimpleRulesTest.occurrences, historic: verySimpleRulesTest.historic, rulesType: "VerySimpleRules")
-let rulesCodableEncode = try jsonEncoder.encode(rulesCodable)
-if let rulesCodableEncodeString = String(data: rulesCodableEncode, encoding: .utf8){
-    print(rulesCodableEncodeString, "Test ENCODE")
+let rulesData = RulesData(occurrences: verySimpleRulesTest.occurrences, historic: verySimpleRulesTest.historic, rulesType: "VerySimpleRules")
+let rulesDataEncode = try jsonEncoder.encode(rulesData)
+if let rulesDataEncodeString = String(data: rulesDataEncode, encoding: .utf8){
+    print(rulesDataEncodeString, "Test ENCODE")
 }
-let rulesCodableDecode = try jsonDecoder.decode(RulesCodable.self, from: rulesCodableEncode)
-let rulesDecode = verySimpleRulesTest.decodeRules(rulesCodable: rulesCodableDecode)
+let rulesDataDecode = try jsonDecoder.decode(RulesData.self, from: rulesDataEncode)
+let rulesDecode = verySimpleRulesTest.decodeRules(rulesData: rulesDataDecode)
 print(rulesDecode, "Test DECODE")
 
 
 //RandomPlayer
 let randomPlayerTest: RandomPlayer = RandomPlayer(withName: "BotRandom", andId: .player1)!
-let playerCodableRandom = PlayerCodable(id: randomPlayerTest.id, name: randomPlayerTest.name, playerType: "RandomPlayer")
-let playerCodableRandomEncode = try jsonEncoder.encode(playerCodableRandom)
-if let playerCodableRandomEncodeString = String(data: playerCodableRandomEncode, encoding: .utf8){
-    print(playerCodableRandomEncodeString, "Test ENCODE")
+let playerDataRandom = PlayerData(id: randomPlayerTest.id, name: randomPlayerTest.name, playerType: "RandomPlayer")
+let playerDataRandomEncode = try jsonEncoder.encode(playerDataRandom)
+if let playerDataRandomEncodeString = String(data: playerDataRandomEncode, encoding: .utf8){
+    print(playerDataRandomEncodeString, "Test ENCODE")
 }
-let playerCodableRandomDecode = try jsonDecoder.decode(PlayerCodable.self, from: playerCodableRandomEncode)
-let playerRandomDecode = randomPlayerTest.decodePlayer(playerCodable: playerCodableRandomDecode)
+let playerDataRandomDecode = try jsonDecoder.decode(PlayerData.self, from: playerDataRandomEncode)
+let playerRandomDecode = randomPlayerTest.decodePlayer(playerData: playerDataRandomDecode)
 print(playerRandomDecode, "Test DECODE")
 
 
 // HumanPlayer
 let humanPlayerTest: HumanPlayer = HumanPlayer(withName: "Human", andId: .player1, andInputMethod: { _ in return Move(owner: .player1, rowOrigin: 0, columnOrigin: 0, rowDestination: 1, columnDestination: 0) })!
-let playerCodableHuman = PlayerCodable(id: humanPlayerTest.id, name: humanPlayerTest.name, playerType: "HumanPlayer")
-let playerCodableHumanEncode = try jsonEncoder.encode(playerCodableHuman)
-if let playerCodableHumanEncodeString = String(data: playerCodableHumanEncode, encoding: .utf8){
-    print(playerCodableHumanEncodeString, "Test ENCODE")
+let playerDataHuman = PlayerData(id: humanPlayerTest.id, name: humanPlayerTest.name, playerType: "HumanPlayer")
+let playerDataHumanEncode = try jsonEncoder.encode(playerDataHuman)
+if let playerDataHumanEncodeString = String(data: playerDataHumanEncode, encoding: .utf8){
+    print(playerDataHumanEncodeString, "Test ENCODE")
 }
-let playerCodableHumanDecode = try jsonDecoder.decode(PlayerCodable.self, from: playerCodableHumanEncode)
-let playerHumanDecode = humanPlayerTest.decodePlayer(playerCodable: playerCodableHumanDecode)
+let playerDataHumanDecode = try jsonDecoder.decode(PlayerData.self, from: playerDataHumanEncode)
+let playerHumanDecode = humanPlayerTest.decodePlayer(playerData: playerDataHumanDecode)
 print(playerHumanDecode, "Test DECODE")
+
+
+
+
+// Game jouer une partie enrengistré
+
+let rules = VerySimpleRules()
+let player1 = RandomPlayer(withName: "Player 1", andId: .player1)!
+let player2 = RandomPlayer(withName: "Player 2", andId: .player2)!
+var game = Game(withRules: rules, andPlayer1: player1, andPlayer2: player2)
 
 
 

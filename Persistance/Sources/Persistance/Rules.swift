@@ -3,20 +3,20 @@ import Model
 
 ///Extension pour la persistance pour le protocol Rules du Model
 extension Model.Rules {
-    public func decodeRules(rulesCodable: RulesCodable) -> any Rules{
-        return rulesCodable.getRules();
+    public func decodeRules(rulesData: RulesData) -> any Rules{
+        return rulesData.getRules();
     }
     
     public func encodeRules() throws {
         let encoder = JSONEncoder()
         let mirror = Mirror(reflecting: self)
-        let rulesCodable = RulesCodable(occurrences: self.occurrences, historic: self.historic, rulesType: "\(mirror.subjectType)")
-        try encoder.encode(rulesCodable)
+        let rulesData = RulesData(occurrences: self.occurrences, historic: self.historic, rulesType: "\(mirror.subjectType)")
+        try encoder.encode(rulesData)
     }
 }
 
 ///Extension pour la persistance pour le protocol Rules du Model pour rendre tout type de regle en persistance
-public struct RulesCodable: Codable{
+public struct RulesData: Codable{
     
     let occurrences: [Board: Int]
     let historic: [Move]
@@ -57,7 +57,7 @@ public struct RulesCodable: Codable{
         let occurences = try container.decode([Board: Int].self, forKey: .occurrences)
         let historic = try container.decode([Move].self, forKey: .historic)
         let rulesType = try container.decode(String.self, forKey: .rulesType)
-        let rules = RulesCodable(occurrences: occurences, historic: historic, rulesType: rulesType)
+        let rules = RulesData(occurrences: occurences, historic: historic, rulesType: rulesType)
         self = rules
     }
     

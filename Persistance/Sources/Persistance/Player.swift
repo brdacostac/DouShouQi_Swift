@@ -4,20 +4,20 @@ import Model
 ///Extension pour la persistance de la structure Player du Model
 extension Model.Player {
     
-    public func decodePlayer(playerCodable: PlayerCodable) -> Player{
-        return playerCodable.getPlayer();
+    public func decodePlayer(playerData: PlayerData) -> Player{
+        return playerData.getPlayer();
     }
     
     public func encodePlayer() throws {
         let encoder = JSONEncoder()
         let mirror = Mirror(reflecting: self)
-        let playerCodable = PlayerCodable(id: self.id, name: self.name, playerType: "\(mirror.subjectType)")
-        try encoder.encode(playerCodable)
+        let playerData = PlayerData(id: self.id, name: self.name, playerType: "\(mirror.subjectType)")
+        try encoder.encode(playerData)
     }
 }
 
 ///Extension pour la persistance de la structure Player du Model
-public struct PlayerCodable: Codable{
+public struct PlayerData: Codable{
     
     let id: Owner
     let name: String
@@ -61,7 +61,7 @@ public struct PlayerCodable: Codable{
         let id = try container.decode(Owner.self, forKey: .id)
         let name = try container.decode(String.self, forKey: .name)
         let playerType = try container.decode(String.self, forKey: .playerType)
-        let player = PlayerCodable(id: id, name: name, playerType: playerType)
+        let player = PlayerData(id: id, name: name, playerType: playerType)
         self = player
     }
 
